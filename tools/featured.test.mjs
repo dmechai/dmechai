@@ -23,17 +23,18 @@ test('renders one compact left-aligned profile entry with verified details', () 
   assert.match(result, /<div align="left">\n<table>\n<tr>\n<td width="400" align="left" valign="top">\n<strong><a href="https:\/\/github\.com\/demo\/demo">demo/);
   assert.equal([...result.matchAll(/<td\b/g)].length, 1);
   assert.match(result, /<sub>The source for this GitHub profile README\.<\/sub>/);
-  assert.match(result, /alt="JavaScript"[^>]+logo=javascript/);
-  assert.match(result, /alt="★ 0 Stars"/);
+  assert.match(result, /featured-javascript\.svg[^>]*> JavaScript<\/code>/);
+  assert.match(result, /<code>★ 0 Stars<\/code>/);
   assert.equal([...result.matchAll(/<li>/g)].length, 2);
   assert.doesNotMatch(result, /^---$|View profile|0 Forks|⚖/m);
   assert.equal(featured(result, 'demo', [repo('demo', 0, {language: 'JavaScript'})]), result);
 });
 
 test('uses the public description and license when available', () => {
-  const result = featured(readme, 'demo', [repo('public-tool', 5, {description: 'A <tool> & examples', license: {spdx_id: 'MIT'}})]);
+  const result = featured(readme, 'demo', [repo('public-tool', 5, {language: 'Python', description: 'A <tool> & examples', license: {spdx_id: 'MIT'}})]);
   assert.match(result, /<sub>A &lt;tool&gt; &amp; examples<\/sub>/);
-  assert.match(result, /alt="⚖ MIT"/);
+  assert.match(result, /featured-python\.svg[^>]*> Python<\/code>/);
+  assert.match(result, /<code>⚖ MIT<\/code>/);
   assert.doesNotMatch(result, /<li>|View profile/);
 });
 

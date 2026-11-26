@@ -2,15 +2,11 @@ const escape = value => value.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;'
 
 const MAX_PROJECTS = 6;
 const COLUMNS = 2;
-const languageIcons = {
-  javascript: 'javascript', typescript: 'typescript', python: 'python',
-  go: 'go', rust: 'rust', ruby: 'ruby', shell: 'gnubash', html: 'html5', css: 'css',
-};
+const languageIcons = { javascript: 'javascript', python: 'python' };
 
-function badge(text, color, logo) {
-  const label = encodeURIComponent(text.replaceAll('-', '--').replaceAll('_', '__'));
-  const icon = logo ? `&amp;logo=${logo}&amp;logoColor=white` : '';
-  return `<img alt="${escape(text)}" src="https://img.shields.io/badge/${label}-${color}?style=flat-square${icon}">`;
+function badge(text, icon) {
+  const image = icon ? `<img src="assets/featured-${icon}.svg" width="12" height="12" alt=""> ` : '';
+  return `<code>${image}${escape(text)}</code>`;
 }
 
 export function featured(readme, owner, repos) {
@@ -24,10 +20,10 @@ export function featured(readme, owner, repos) {
       || (isProfile ? 'The source for this GitHub profile README.' : '');
     const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}`;
     const license = repo.license?.spdx_id;
-    const badges = [badge(`\u2605 ${repo.stargazers_count} Stars`, '444444'),
-      repo.language ? badge(repo.language, '4b5563', Object.hasOwn(languageIcons, repo.language.toLowerCase()) ? languageIcons[repo.language.toLowerCase()] : undefined) : '',
-      license && license !== 'NOASSERTION' ? badge(`\u2696 ${license}`, '444444') : '',
-      repo.forks_count > 0 ? badge(`${repo.forks_count} Forks`, '444444', 'github') : '',
+    const badges = [badge(`\u2605 ${repo.stargazers_count} Stars`),
+      repo.language ? badge(repo.language, Object.hasOwn(languageIcons, repo.language.toLowerCase()) ? languageIcons[repo.language.toLowerCase()] : undefined) : '',
+      license && license !== 'NOASSERTION' ? badge(`\u2696 ${license}`) : '',
+      repo.forks_count > 0 ? badge(`${repo.forks_count} Forks`) : '',
     ].filter(Boolean).join(' ');
     return [
       `<td width="${selected.length === 1 ? '400' : '50%'}" align="left" valign="top">`,
