@@ -1,6 +1,6 @@
 <h1 align="center"><em>Hi, I'm dmechai</em></h1>
 
-<p align="center"><a href="https://github.com/dmechai/readme/edit/main/README.md">编辑这份 README</a></p>
+<p align="center"><a href="https://github.com/dmechai/dmechai/edit/main/README.md">编辑这份 README</a></p>
 
 <h3 align="center"><ins><sup>ABOUT ME</sup></ins></h3>
 
@@ -24,40 +24,21 @@
 
 <!-- tech-stack:end -->
 
-<!-- owned-stats:start -->
+<!-- fun-facts:start -->
 
 ---
 
 <h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>
 
-<sub>Aggregate stats across owned public and private repositories (excluding forks and this repository).</sub>
+> **暂无公开数据**：这里只显示 GitHub 公开仓库的公开统计，不会读取私有仓库。
 
-**Commits by day of week**
-
-Last 90 UTC calendar days · GitHub commit contributions
-
-> No qualifying commit contributions returned by GitHub for this period.
-
-**Repositories by primary language**
-
-GitHub-detected primary languages
-
-```text
-Python        9 repos  ████████████░░░░░░░░   60.0%
-Shell         2 repos  ███░░░░░░░░░░░░░░░░░   13.3%
-Go             1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
-HTML           1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
-JavaScript     1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
-TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
-```
-
-<!-- owned-stats:end -->
+<!-- fun-facts:end -->
 
 <!-- featured-projects:start -->
 
 <h3 align="center"><ins><sup>FEATURED PROJECTS</sup></ins></h3>
 
-> **待选择**：选几个你想展示的项目，填上名称、链接和一句简介。私有项目链接只有有权限的读者能打开。
+> **待选择**：选几个公开项目，填上名称、链接和一句简介。
 
 <!-- featured-projects:end -->
 
