@@ -1,6 +1,6 @@
 <h1 align="center"><em>Hi, I'm dmechai</em></h1>
 
-This private repository preserves the former GitHub profile README. Edit this file directly to change its content. The charts and animation below are snapshots and no longer refresh automatically.
+This private repository contains the former GitHub profile README. Edit this file directly to change the introduction or contact links. The charts and animation refresh daily without changing your text.
 
 <!-- contact:start -->
 
@@ -20,20 +20,6 @@ This private repository preserves the former GitHub profile README. Edit this fi
 <h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>
 
 <sub>Aggregate stats across owned public and private repositories (excluding forks and this profile).</sub>
-
-**Commits by day of week**
-
-Last 90 UTC calendar days at the time of the snapshot · GitHub commit contributions
-
-```text
-Sunday       0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
-Monday       0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
-Tuesday       1 commit  ███░░░░░░░░░░░░░░░░░   16.7%
-Wednesday    0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
-Thursday     0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
-Friday       5 commits  █████████████████░░░   83.3%
-Saturday     0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
-```
 
 **Repositories by primary language**
 
@@ -65,3 +51,5 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 <sub>Animation generated with <a href="https://github.com/Platane/snk">Platane/snk</a>.</sub>
 
 <!-- snake:end -->
+
+[Refresh and maintenance](tools/README.md)
