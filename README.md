@@ -70,9 +70,17 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 
 <br>
 
-### <ins><sup>FEATURED PROJECTS</sup></ins>
+## 🚀 Featured Projects
 
-<a href="https://github.com/dmechai/dmechai"><strong>dmechai</strong></a><br>No description<br><sub>0 stars · 0 forks</sub>
+<table>
+<tr>
+<td align="left" valign="top">
+<h3><a href="https://github.com/dmechai/dmechai">dmechai</a></h3>
+<p>My GitHub profile, with project highlights and a contribution calendar.</p>
+<p><img alt="Stars: 0" src="https://img.shields.io/badge/Stars-0-444444?style=flat-square"> <img alt="Forks: 0" src="https://img.shields.io/badge/Forks-0-444444?style=flat-square"> <img alt="Language: JavaScript" src="https://img.shields.io/badge/Language-JavaScript-444444?style=flat-square"></p>
+</td>
+</tr>
+</table>
 
 <br>
 

@@ -3,7 +3,16 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { contributionGrid, writeContributionSnakes } from './contribution-snake.mjs';
+import { contributionGrid, snakeRoute, writeContributionSnakes } from './contribution-snake.mjs';
+
+test('visits every calendar cell with adjacent steps and closes the loop', () => {
+  const route = snakeRoute();
+  assert.deepEqual(route[0], route.at(-1));
+  assert.equal(new Set(route.slice(1, 1 + 53 * 7).map(point => point.join(','))).size, 53 * 7);
+  for (let i = 1; i < route.length; i++) {
+    assert.equal(Math.abs(route[i][0] - route[i - 1][0]) + Math.abs(route[i][1] - route[i - 1][1]), 1);
+  }
+});
 
 const commit = (day, id = 'a', sha = 'a') => ({repositoryId: id, sha: sha.repeat(40), committedAt: `${day}T12:00:00Z`});
 

@@ -15,6 +15,15 @@ test('selects the six highest-ranked public repositories and hides private ones'
   assert.ok(result.startsWith('Before\n') && result.endsWith('\nAfter'));
 });
 
+test('renders a single profile card with a description and no blank column', () => {
+  const result = featured(readme, 'demo', [repo('demo', 0, {language: 'JavaScript'})]);
+  assert.match(result, /Featured Projects/);
+  assert.match(result, /My GitHub profile, with project highlights and a contribution calendar/);
+  assert.match(result, /Language-JavaScript/);
+  assert.equal([...result.matchAll(/<td\b/g)].length, 1);
+  assert.doesNotMatch(result, /No description/);
+});
+
 test('hides the section when no public repository exists', () => {
   assert.equal(featured(readme, 'demo', [repo('secret', 5, {private: true})]), 'Before\n<!-- featured-projects:start -->\n<!-- featured-projects:end -->\nAfter');
 });

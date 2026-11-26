@@ -77,7 +77,7 @@ function collect(owner, repos) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    const [owner, path = 'README.md'] = process.argv.slice(2);
+    const [owner, path = 'README.md', light = 'assets/snake.svg', dark = 'assets/snake-dark.svg'] = process.argv.slice(2);
     if (!/^[a-z\d][a-z\d-]*$/i.test(owner ?? '')) throw new Error('Expected GitHub owner');
     const repos = execFileSync('gh', ['api', '--paginate', '--jq', '.[] | {owner:{login:.owner.login},name,id,fork,language}', 'user/repos?affiliation=owner&per_page=100'],
       {encoding: 'utf8', timeout: 60_000, maxBuffer: 8 * 1024 * 1024}).trim().split('\n').filter(Boolean).map(line => JSON.parse(line));
@@ -85,7 +85,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const commits = collect(owner, repos);
     const next = aggregate(original, owner, repos, commits);
     if (original !== next) writeFileSync(path, next);
-    if (path === 'README.md') writeContributionSnakes({light: 'assets/snake.svg', dark: 'assets/snake-dark.svg'}, commits);
+    writeContributionSnakes({light, dark}, commits);
   } catch {
     console.error('Could not refresh aggregate profile stats. No API payload was logged.');
     process.exitCode = 1;

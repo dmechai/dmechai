@@ -35,48 +35,51 @@ export function contributionGrid(commits, now = Date.now()) {
   return {start, today, cells, commits: counts.reduce((sum, count) => sum + count, 0)};
 }
 
-function animation(cells) {
-  const route = [];
+export function snakeRoute() {
+  const route = [[-1, 0]];
   for (let x = 0; x < WEEKS; x++) {
-    for (let offset = 0; offset < DAYS; offset++) {
-      const y = x % 2 ? DAYS - 1 - offset : offset;
-      if (cells[x * DAYS + y]) route.push({x, y, color: cells[x * DAYS + y]});
-    }
+    for (let i = 0; i < DAYS; i++) route.push([x, x % 2 ? DAYS - 1 - i : i]);
   }
-  route.push({x: WEEKS, y: route.at(-1)?.x % 2 ? 0 : DAYS - 1, color: 0});
+  route.push([WEEKS, DAYS - 1], [WEEKS, DAYS]);
+  for (let x = WEEKS - 1; x >= -1; x--) route.push([x, DAYS]);
+  for (let y = DAYS - 1; y >= 0; y--) route.push([-1, y]);
   return route;
 }
 
-function svg(cells, snake) {
+function svg(cells, theme) {
   const cell = 16;
-  const dot = 12;
-  const radius = 2;
-  const margin = (cell - dot) / 2;
-  const route = animation(cells);
-  const duration = Math.max(1, route.length - 1) * 140;
-  const colors = {light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'], dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353']};
+  const step = 95;
+  const route = snakeRoute();
+  const duration = (route.length - 1) * step;
+  const dark = theme === 'dark';
+  const colors = dark ? ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'] : ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'];
   const rects = [];
   const styles = [];
   for (let x = 0; x < WEEKS; x++) {
     for (let y = 0; y < DAYS; y++) {
-      const eatenAt = route.findIndex(step => step.x === x && step.y === y);
-      const id = eatenAt >= 0 ? `c${eatenAt.toString(36)}` : '';
       const color = cells[x * DAYS + y];
-      if (id) {
-        const t = eatenAt / (route.length - 1);
-        styles.push(`@keyframes ${id}{${((t - 0.0001) * 100).toFixed(4)}%{fill:var(--c${color})}${((t + 0.0001) * 100).toFixed(4)}%{fill:var(--ce)}100%{fill:var(--ce)}}`);
+      const id = `c${x * DAYS + y}`;
+      if (color) {
+        const eatenAt = 1 + x * DAYS + (x % 2 ? DAYS - 1 - y : y);
+        const t = (100 * eatenAt / (route.length - 1)).toFixed(5);
+        styles.push(`@keyframes ${id}{from{fill:${colors[color]}}${t}%,to{fill:${colors[0]}}}.c.${id}{fill:${colors[color]};animation-name:${id}}`);
       }
-      rects.push(`<rect class="c${id ? ` ${id}` : ''}" x="${x * cell + margin}" y="${y * cell + margin}" width="${dot}" height="${dot}" rx="${radius}" ry="${radius}"${id ? ` style="fill:var(--c${color});animation-name:${id}"` : ''}/>`);
+      rects.push(`<rect class="c${color ? ` ${id}` : ''}" x="${x * cell + 2}" y="${y * cell + 2}" width="12" height="12" rx="2"/>`);
     }
   }
-  const points = route.map(step => `${step.x * cell + cell / 2},${step.y * cell + cell / 2}`);
-  const snakePath = points.length > 1 ? `M${points.join('L')}` : '';
-  return `<svg viewBox="-16 -32 ${cell * (WEEKS + 2)} ${cell * (DAYS + 5)}" width="${cell * (WEEKS + 2)}" height="${cell * (DAYS + 5)}" xmlns="http://www.w3.org/2000/svg"><style>:root{--ce:${colors.light[0]};--cb:#1b1f230f;--cs:${snake};${colors.light.slice(1).map((color, i) => `--c${i + 1}:${color}`).join(';')}}@media(prefers-color-scheme:dark){:root{--ce:${colors.dark[0]};--cb:#ffffff0f;--cs:${snake};${colors.dark.slice(1).map((color, i) => `--c${i + 1}:${color}`).join(';')}}}.c{shape-rendering:geometricPrecision;fill:var(--ce);stroke:var(--cb);stroke-width:1px;animation:none ${duration}ms linear infinite}.s{fill:none;stroke:var(--cs);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}${styles.join('')}</style>${rects.join('')}<path class="s" d="${snakePath}" pathLength="1" stroke-dasharray="0.035 1" stroke-dashoffset="0"><animate attributeName="stroke-dashoffset" values="0;-1" dur="${duration}ms" repeatCount="indefinite"/></path></svg>`;
+  const path = `M${route.map(([x, y]) => `${x * cell + 8},${y * cell + 8}`).join('L')}`;
+  const body = cells.some(Boolean) ? Array.from({length: 7}, (_, i) => {
+    const lag = (6 - i) * 37;
+    const color = dark ? (i === 6 ? '#e6edf3' : '#aeb8c2') : (i === 6 ? '#343a42' : '#5f6368');
+    const motion = `<animateMotion dur="${duration}ms" begin="-${duration - lag}ms" repeatCount="indefinite" path="${path}"/>`;
+    return `<circle class="s" r="${i === 6 ? 6.3 : 3.8 + i * 0.3}" fill="${color}">${motion}</circle>`;
+  }).join('') : '';
+  return `<svg viewBox="-16 -4 880 136" width="880" height="136" xmlns="http://www.w3.org/2000/svg"><style>.c{fill:${colors[0]};stroke:${dark ? '#ffffff0f' : '#1b1f230f'};animation-duration:${duration}ms;animation-timing-function:steps(1,end);animation-iteration-count:infinite}${styles.join('')}@media(prefers-reduced-motion:reduce){.c{animation:none}.s{display:none}}</style>${rects.join('')}${body}</svg>`;
 }
 
 export function writeContributionSnakes(paths, commits, now = Date.now()) {
   const {cells, commits: counted} = contributionGrid(commits, now);
-  const images = {light: svg(cells, '#5f6368'), dark: svg(cells, '#bbc2c9')};
+  const images = {light: svg(cells, 'light'), dark: svg(cells, 'dark')};
   for (const [theme, path] of Object.entries(paths)) writeFileSync(path, images[theme]);
   return {days: cells.filter(Boolean).length, commits: counted};
 }
