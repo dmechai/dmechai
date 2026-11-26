@@ -58,4 +58,12 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 <!-- featured-projects:end -->
 
 <!-- snake:start -->
+
+<h3 align="center"><ins><sup>CONTRIBUTION ACTIVITY</sup></ins></h3>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/snake-dark.svg">
+  <img alt="GitHub contribution snake" src="assets/snake.svg">
+</picture>
+
 <!-- snake:end -->
