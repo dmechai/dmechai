@@ -24,9 +24,9 @@ test('counts every current-branch commit once and excludes forks, profile, and f
   assert.match(result, /Friday\s+1 commit[^\n]+33\.3%/);
   assert.match(result, /GitHub-detected languages/);
   const languages = result.split('GitHub-detected languages')[1];
-  assert.match(languages, /Python\s+1 repo[^\n]*██████████░░░░░░░░░░/);
-  assert.match(languages, /Shell\s+2 repos[^\n]*████████████████████/);
-  assert.doesNotMatch(languages, /%|3 repositories/);
+  assert.match(languages, /Python\s+1 repo[^\n]*33\.3%/);
+  assert.match(languages, /Shell\s+2 repos[^\n]*66\.7%/);
+  assert.doesNotMatch(languages, /3 repositories/);
   assert.doesNotMatch(result, /fixture|Rust|Ruby|Scala|Empty|101|102|https:/);
 });
 

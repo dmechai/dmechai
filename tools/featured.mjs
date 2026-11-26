@@ -5,18 +5,13 @@ const escape = value => value.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;'
 
 const MAX_PROJECTS = 6;
 const COLUMNS = 2;
-const logoArt = Object.fromEntries(['javascript', 'python'].map(name => {
-  const svg = readFileSync(new URL(`../assets/featured-${name}.svg`, import.meta.url), 'utf8');
-  return [name, svg.trim().replace(/^<svg[^>]*>|<\/svg>$/g, '')];
-}));
-const brands = {javascript: ['#f7df1e', '#242424', 'JS', 'javascript'], python: ['#3776ab', '#ffffff', 'Py', 'python'], typescript: ['#3178c6', '#ffffff', 'TS']};
+const brands = {javascript: ['f7df1e', 'javascript', 'black'], python: ['3776ab', 'python'], typescript: ['3178c6', 'typescript'], go: ['00add8', 'go'], rust: ['24292f', 'rust']};
 
-function badgeSvg(label, color, ink, icon, logo) {
-  const width = 28 + label.length * 7 + (logo ? 0 : Math.max(0, icon.length - 1) * 5);
-  const mark = logo
-    ? `<svg x="3" y="3" width="14" height="14" viewBox="0 0 16 16">${logoArt[logo]}</svg>`
-    : `<text x="10" y="14" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="12" font-weight="bold">${escape(icon)}</text>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="20" viewBox="0 0 ${width} 20"><rect width="${width}" height="20" fill="${color}"/><rect width="20" height="20" fill="#24292f"/>${mark}<text x="25" y="14" textLength="${label.length * 6.5}" lengthAdjust="spacingAndGlyphs" fill="${ink}" font-family="Verdana, sans-serif" font-size="11">${escape(label)}</text></svg>\n`;
+function badgeUrl(parts, color, logo, logoColor = 'white') {
+  const label = parts.map(part => encodeURIComponent(part.replaceAll('-', '--').replaceAll('_', '__'))).join('-');
+  const query = new URLSearchParams({style: 'flat-square'});
+  if (logo) { query.set('logo', logo); query.set('logoColor', logoColor); }
+  return `https://img.shields.io/badge/${label}-${color}?${query}`;
 }
 
 export function featured(readme, owner, repos, images = new Map()) {
@@ -31,18 +26,17 @@ export function featured(readme, owner, repos, images = new Map()) {
     const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}`;
     const license = repo.license?.spdx_id;
     const language = typeof repo.language === 'string' ? repo.language : '';
-    const brand = Object.hasOwn(brands, language.toLowerCase()) ? brands[language.toLowerCase()] : ['#424a53', '#ffffff', '<>'];
-    const neutral = (label, icon) => [label, '#424a53', '#ffffff', icon];
+    const brand = Object.hasOwn(brands, language.toLowerCase()) ? brands[language.toLowerCase()] : ['555555'];
     const badges = [
-      repo.stargazers_count > 0 && neutral(`${repo.stargazers_count} Stars`, '\u2605'),
-      repo.forks_count > 0 && neutral(`${repo.forks_count} Forks`, '\u2442'),
-      language && [language, ...brand],
-      license && license !== 'NOASSERTION' && neutral(license, '\u2696'),
-      ...(isProfile ? [neutral('Activity Charts', '\u25a5'), neutral('Contribution Snake', '\u223f')] : []),
-      ...(Array.isArray(repo.topics) ? repo.topics.filter(topic => typeof topic === 'string' && /^[\w-]{1,24}$/.test(topic)).map(topic => neutral(topic, '#')) : []),
-    ].filter(Boolean).slice(0, 3).map(([label, color, ink, icon, logo], i) => {
+      repo.stargazers_count > 0 && [`${repo.stargazers_count} Stars`, ['Stars', String(repo.stargazers_count)], '555555', 'github'],
+      repo.forks_count > 0 && [`${repo.forks_count} Forks`, ['Forks', String(repo.forks_count)], '555555', 'github'],
+      language && [language, [language], ...brand],
+      license && license !== 'NOASSERTION' && [license, ['License', license], '2e7d32'],
+      ...(isProfile ? [['Activity Charts', ['Activity', 'Charts'], '0969da'], ['Contribution Snake', ['Contributions', 'Snake'], '2e7d32']] : []),
+      ...(Array.isArray(repo.topics) ? repo.topics.filter(topic => typeof topic === 'string' && /^[\w-]{1,24}$/.test(topic)).map(topic => [topic, [topic], '555555']) : []),
+    ].filter(Boolean).slice(0, 3).map(([label, parts, color, logo, logoColor], i) => {
       const name = `${rank + 1}-${i + 1}.svg`;
-      images.set(name, badgeSvg(label, color, ink, icon, logo));
+      images.set(name, badgeUrl(parts, color, logo, logoColor));
       return `<img alt="${escape(label)}" src="assets/featured/${name}">`;
     }).join(' ');
     return [
@@ -74,8 +68,15 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const source = readFileSync('README.md', 'utf8');
   const next = featured(source, owner, JSON.parse(readFileSync(inventory, 'utf8')), images);
   const dir = 'assets/featured';
+  const assets = await Promise.all([...images].map(async ([name, url]) => {
+    const response = await fetch(url, {signal: AbortSignal.timeout(15000)});
+    if (!response.ok || !response.headers.get('content-type')?.startsWith('image/svg+xml')) throw new Error(`Could not download badge ${name}: HTTP ${response.status}`);
+    const svg = await response.text();
+    if (!/^<svg\b/.test(svg) || !svg.includes('</svg>')) throw new Error(`Invalid badge ${name}`);
+    return [name, svg];
+  }));
   mkdirSync(dir, {recursive: true});
-  for (const [name, svg] of images) writeFileSync(`${dir}/${name}`, svg);
+  for (const [name, svg] of assets) writeFileSync(`${dir}/${name}`, svg);
   for (const name of readdirSync(dir)) {
     if (/^[1-6]-[1-3]\.svg$/.test(name) && !images.has(name)) unlinkSync(`${dir}/${name}`);
   }
