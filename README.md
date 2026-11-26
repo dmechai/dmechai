@@ -4,7 +4,7 @@
 
 ### <ins><sup>ABOUT ME</sup></ins>
 
-**待填写**：写一两句话介绍自己，或写下你最近在做什么。
+请你一言不发，穿过这片沼泽。
 
 ### <sup>LET'S CONNECT!</sup>
 
