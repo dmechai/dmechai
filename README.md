@@ -13,38 +13,42 @@
 <!-- tech-stack:start -->
 <!-- tech-stack:end -->
 
-<!-- fun-facts:start -->
+<!-- owned-stats:start -->
 
 ---
 
 <h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>
 
-Recent public pushes · Last 30 days · UTC · 14 recorded
+<sub>Aggregate stats across owned public and private repositories (excluding forks and this profile).</sub>
 
-**By time of day**
+**Commits by day of week**
 
-```text
-Morning      4  ██████░░░░░░░░░░░░░░  28.6%
-Daytime      0  ░░░░░░░░░░░░░░░░░░░░   0.0%
-Evening      6  █████████░░░░░░░░░░░  42.9%
-Night        4  ██████░░░░░░░░░░░░░░  28.6%
-```
-
-**By day of week**
+Last 90 UTC calendar days · GitHub commit contributions
 
 ```text
-Sunday       1  █░░░░░░░░░░░░░░░░░░░   7.1%
-Monday       1  █░░░░░░░░░░░░░░░░░░░   7.1%
-Tuesday      6  █████████░░░░░░░░░░░  42.9%
-Wednesday    2  ███░░░░░░░░░░░░░░░░░  14.3%
-Thursday     2  ███░░░░░░░░░░░░░░░░░  14.3%
-Friday       2  ███░░░░░░░░░░░░░░░░░  14.3%
-Saturday     0  ░░░░░░░░░░░░░░░░░░░░   0.0%
+Sunday       0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
+Monday       0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
+Tuesday       1 commit  ███░░░░░░░░░░░░░░░░░   16.7%
+Wednesday    0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
+Thursday     0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
+Friday       5 commits  █████████████████░░░   83.3%
+Saturday     0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
 ```
 
-<sub>Latest recorded push: 2026-11-25 UTC</sub>
+**Repositories by primary language**
 
-<!-- fun-facts:end -->
+GitHub-detected primary languages
+
+```text
+Python        9 repos  ████████████░░░░░░░░   60.0%
+Shell         2 repos  ███░░░░░░░░░░░░░░░░░   13.3%
+Go             1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+HTML           1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+JavaScript     1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+```
+
+<!-- owned-stats:end -->
 
 <!-- featured-projects:start -->
 <!-- featured-projects:end -->

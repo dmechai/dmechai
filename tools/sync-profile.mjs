@@ -71,7 +71,7 @@ function factsBlock(events, publicRepoIds, profileRepo, now, featured) {
   return blocks.join('\n\n');
 }
 
-function replaceBlock(readme, name, content) {
+export function replaceBlock(readme, name, content) {
   const begin = `<!-- ${name}:start -->`;
   const end = `<!-- ${name}:end -->`;
   const start = readme.indexOf(begin);
@@ -133,13 +133,14 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const pages = JSON.parse(readFileSync(0, 'utf8'));
   if (!/^[a-z\d][a-z\d-]*$/i.test(owner ?? '')) throw new Error('Invalid GitHub owner');
   const api = endpoint => JSON.parse(execFileSync('gh', ['api', endpoint], {encoding: 'utf8', timeout: 30_000}));
-  const eventOutput = execFileSync('gh', ['api', '--paginate', '--jq', '.[]', `users/${owner}/events/public?per_page=100`],
-    {encoding: 'utf8', timeout: 30_000, maxBuffer: 8 * 1024 * 1024});
+  const events = original.includes('<!-- owned-stats:start -->') ? undefined : execFileSync('gh', [
+    'api', '--paginate', '--jq', '.[]', `users/${owner}/events/public?per_page=100`,
+  ], {encoding: 'utf8', timeout: 30_000, maxBuffer: 8 * 1024 * 1024}).split('\n').filter(line => line.trim()).map(line => JSON.parse(line));
   const next = sync(original, pages, owner, {
     account: api(`users/${owner}`),
     languages: name => api(`repos/${owner}/${name}/languages`),
     stack: JSON.parse(readFileSync(new URL('./tech-stack.json', import.meta.url), 'utf8')),
-    events: eventOutput.split('\n').filter(line => line.trim()).map(line => JSON.parse(line)),
+    events,
   });
   if (original !== next) writeFileSync(path, next);
 }

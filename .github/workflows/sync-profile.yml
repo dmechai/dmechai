@@ -32,7 +32,7 @@ jobs:
           PROFILE_OWNER: ${{ github.repository_owner }}
         run: |
           set -o pipefail
-          node --test tools/sync-profile.test.mjs
+          node --test tools/*.test.mjs
           gh api --paginate "users/$PROFILE_OWNER/repos?type=owner&per_page=100" | jq -s . | node tools/sync-profile.mjs "$PROFILE_OWNER"
       - name: Publish changes
         run: |
