@@ -30,13 +30,21 @@
 
 <h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>
 
-<sub>Aggregate totals only. Private repository names, links, and individual activity are not shown.</sub>
+<sub>All commits reachable from current branches, counted once per repository. Forks, this repository, private names, links, and per-repository activity are excluded.</sub>
 
 **Commits by day of week**
 
-Last 90 UTC calendar days · GitHub commit contributions
+Complete current branch history · UTC committer dates
 
-> No qualifying commit contributions returned by GitHub for this period.
+```text
+Sunday     190 commits  ██░░░░░░░░░░░░░░░░░░   11.7%
+Monday     258 commits  ███░░░░░░░░░░░░░░░░░   15.8%
+Tuesday    249 commits  ███░░░░░░░░░░░░░░░░░   15.3%
+Wednesday  275 commits  ███░░░░░░░░░░░░░░░░░   16.9%
+Thursday   271 commits  ███░░░░░░░░░░░░░░░░░   16.6%
+Friday     281 commits  ███░░░░░░░░░░░░░░░░░   17.3%
+Saturday   104 commits  █░░░░░░░░░░░░░░░░░░░    6.4%
+```
 
 **Repositories by primary language**
 

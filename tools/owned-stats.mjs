@@ -1,22 +1,10 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-const day = 86_400_000;
+
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const query = `query($from: DateTime!, $to: DateTime!) {
-  viewer {
-    login
-    contributionsCollection(from: $from, to: $to) {
-      commitContributionsByRepository(maxRepositories: 100) {
-        repository { databaseId }
-        contributions(first: 100) {
-          nodes { occurredAt commitCount }
-          pageInfo { hasNextPage }
-        }
-      }
-    }
-  }
-}`;
 
 function chart(rows, unit) {
   const total = rows.reduce((sum, [, n]) => sum + n, 0);
@@ -30,22 +18,19 @@ function chart(rows, unit) {
   }), '```'].join('\n');
 }
 
-export function aggregate(readme, owner, repos, viewer, from, to) {
-  if (viewer?.login?.toLowerCase() !== owner.toLowerCase()) throw new Error('Wrong GitHub account');
+export function aggregate(readme, owner, repos, commits) {
   const allowed = repos.filter(repo => repo.owner?.login?.toLowerCase() === owner.toLowerCase()
     && repo.fork === false && repo.name?.toLowerCase() !== owner.toLowerCase());
   const ids = new Set(allowed.map(repo => repo.id));
   const days = weekdays.map(() => 0);
-  const groups = viewer.contributionsCollection.commitContributionsByRepository;
-  if (groups.length >= 100) throw new Error('Commit repository limit reached; refusing to publish partial counts');
-  for (const group of groups) {
-    if (!ids.has(group.repository.databaseId)) continue;
-    if (group.contributions.pageInfo.hasNextPage) throw new Error('Commit contribution results are incomplete');
-    for (const { occurredAt, commitCount } of group.contributions.nodes) {
-      const stamp = Date.parse(occurredAt);
-      if (!Number.isSafeInteger(commitCount) || commitCount < 0 || !Number.isFinite(stamp)) throw new Error('Invalid commit contribution');
-      if (stamp >= from && stamp <= to) days[new Date(stamp).getUTCDay()] += commitCount;
-    }
+  const seen = new Set();
+  for (const commit of commits) {
+    if (!ids.has(commit.repositoryId) || typeof commit.sha !== 'string' || !/^[0-9a-f]{40}$/.test(commit.sha)) continue;
+    const key = `${commit.repositoryId}:${commit.sha}`;
+    const stamp = Date.parse(commit.committedAt);
+    if (seen.has(key) || !Number.isFinite(stamp)) continue;
+    seen.add(key);
+    days[new Date(stamp).getUTCDay()]++;
   }
   const languages = new Map();
   for (const { language } of allowed) {
@@ -53,14 +38,12 @@ export function aggregate(readme, owner, repos, viewer, from, to) {
     languages.set(language, (languages.get(language) ?? 0) + 1);
   }
   const ranked = [...languages].sort(([a, x], [b, y]) => y - x || a.localeCompare(b, 'en'));
-  const commits = chart(weekdays.map((label, i) => [label, days[i]]), 'commit');
-  const byLanguage = chart(ranked, 'repo');
   const content = ['---', '<h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>',
-    '<sub>Aggregate totals only. Private repository names, links, and individual activity are not shown.</sub>',
-    '**Commits by day of week**', 'Last 90 UTC calendar days · GitHub commit contributions',
-    commits || '> No qualifying commit contributions returned by GitHub for this period.',
+    '<sub>All commits reachable from current branches, counted once per repository. Forks, this repository, private names, links, and per-repository activity are excluded.</sub>',
+    '**Commits by day of week**', 'Complete current branch history · UTC committer dates',
+    chart(weekdays.map((label, i) => [label, days[i]]), 'commit') || '> No commits were found in the current branch history.',
     '**Repositories by primary language**', 'GitHub-detected primary languages',
-    byLanguage || '> No primary languages detected for the repositories counted.',
+    chart(ranked, 'repo') || '> No primary languages detected for the repositories counted.',
   ].join('\n\n');
   const start = '<!-- fun-facts:start -->';
   const end = '<!-- fun-facts:end -->';
@@ -72,21 +55,34 @@ export function aggregate(readme, owner, repos, viewer, from, to) {
   return readme.slice(0, fromBlock + start.length) + `\n\n${content}\n\n` + readme.slice(toBlock);
 }
 
+function collect(owner, repos) {
+  const root = mkdtempSync(join(tmpdir(), 'profile-history-'));
+  const commits = [];
+  try {
+    for (const repo of repos) {
+      if (repo.owner?.login?.toLowerCase() !== owner.toLowerCase() || repo.fork || repo.name?.toLowerCase() === owner.toLowerCase()) continue;
+      const dir = join(root, String(repo.id));
+      execFileSync('git', ['clone', '--quiet', '--bare', `https://github.com/${owner}/${repo.name}.git`, dir], {timeout: 300_000, stdio: 'ignore'});
+      const output = execFileSync('git', ['-C', dir, 'log', '--branches', '--format=%H%x09%cI'], {encoding: 'utf8', timeout: 120_000, maxBuffer: 64 * 1024 * 1024});
+      for (const line of output.split('\n').filter(Boolean)) {
+        const [sha, committedAt] = line.split('\t');
+        commits.push({repositoryId: repo.id, sha, committedAt});
+      }
+    }
+  } finally {
+    rmSync(root, {recursive: true, force: true});
+  }
+  return commits;
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     const [owner, path = 'README.md'] = process.argv.slice(2);
     if (!/^[a-z\d][a-z\d-]*$/i.test(owner ?? '')) throw new Error('Expected GitHub owner');
-    const api = args => execFileSync('gh', ['api', ...args], {encoding: 'utf8', timeout: 60_000,
-      maxBuffer: 8 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe']});
-    const to = Date.now();
-    const from = Math.floor(to / day) * day - 89 * day;
-    const repos = api(['--paginate', '--jq', '.[] | {owner:{login:.owner.login},name,id,fork,language}',
-      'user/repos?affiliation=owner&per_page=100']).trim().split('\n').filter(Boolean).map(line => JSON.parse(line));
-    const result = JSON.parse(api(['graphql', '-f', `query=${query}`, '-f', `from=${new Date(from).toISOString()}`,
-      '-f', `to=${new Date(to).toISOString()}`]));
-    if (result.errors?.length) throw new Error('GitHub contribution query failed');
+    const repos = execFileSync('gh', ['api', '--paginate', '--jq', '.[] | {owner:{login:.owner.login},name,id,fork,language}', 'user/repos?affiliation=owner&per_page=100'],
+      {encoding: 'utf8', timeout: 60_000, maxBuffer: 8 * 1024 * 1024}).trim().split('\n').filter(Boolean).map(line => JSON.parse(line));
     const original = readFileSync(path, 'utf8');
-    const next = aggregate(original, owner, repos, result.data.viewer, from, to);
+    const next = aggregate(original, owner, repos, collect(owner, repos));
     if (original !== next) writeFileSync(path, next);
   } catch {
     console.error('Could not refresh aggregate profile stats. No API payload was logged.');
