@@ -11,8 +11,9 @@
 Visit [my website](https://dmechai.com/) or connect with me on:
 
 <!-- contact:start -->
-[![Email](https://img.shields.io/badge/Email-444444?style=flat&logo=gmail&logoColor=white)](mailto:hey.dmechai@gmail.com)
-[![X](https://img.shields.io/badge/X-444444?style=flat&logo=x&logoColor=white)](https://x.com/0xdmechai)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/dmechai)
+[![Email](https://img.shields.io/badge/Email-D14836?style=flat&logo=gmail&logoColor=white)](mailto:hey.dmechai@gmail.com)
+[![X](https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white)](https://x.com/0xdmechai)
 <!-- contact:end -->
 
 <br>
@@ -24,13 +25,15 @@ Visit [my website](https://dmechai.com/) or connect with me on:
 <!-- tech-stack:start -->
 <!-- tech-stack:end -->
 
+<!-- fun-facts:start -->
+
+
 <br>
 
 ---
 
 <br>
 
-<!-- fun-facts:start -->
 
 ### <ins><sup>FUN FACTS</sup></ins>
 
@@ -59,20 +62,25 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 
 <!-- fun-facts:end -->
 
-<br>
-
----
-
-<br>
-
 <!-- featured-projects:start -->
-<!-- featured-projects:end -->
 
 <br>
 
 ---
 
 <br>
+
+### <ins><sup>FEATURED PROJECTS</sup></ins>
+
+<a href="https://github.com/dmechai/dmechai"><strong>dmechai</strong></a><br>No description<br><sub>0 stars · 0 forks</sub>
+
+<br>
+
+---
+
+<br>
+
+<!-- featured-projects:end -->
 
 <!-- snake:start -->
 ### <ins><sup>CONTRIBUTION ACTIVITY</sup></ins>
