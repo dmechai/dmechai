@@ -3,6 +3,7 @@ import { mkdtempSync, rmSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { writeContributionSnakes } from './contribution-snake.mjs';
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -81,8 +82,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const repos = execFileSync('gh', ['api', '--paginate', '--jq', '.[] | {owner:{login:.owner.login},name,id,fork,language}', 'user/repos?affiliation=owner&per_page=100'],
       {encoding: 'utf8', timeout: 60_000, maxBuffer: 8 * 1024 * 1024}).trim().split('\n').filter(Boolean).map(line => JSON.parse(line));
     const original = readFileSync(path, 'utf8');
-    const next = aggregate(original, owner, repos, collect(owner, repos));
+    const commits = collect(owner, repos);
+    const next = aggregate(original, owner, repos, commits);
     if (original !== next) writeFileSync(path, next);
+    if (path === 'README.md') writeContributionSnakes({light: 'assets/snake.svg', dark: 'assets/snake-dark.svg'}, commits);
   } catch {
     console.error('Could not refresh aggregate profile stats. No API payload was logged.');
     process.exitCode = 1;

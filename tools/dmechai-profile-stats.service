@@ -13,4 +13,4 @@ UMask=0077
 PrivateTmp=true
 ProtectSystem=strict
 NoNewPrivileges=true
-TimeoutStartSec=5min
+TimeoutStartSec=20min
