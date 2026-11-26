@@ -42,7 +42,7 @@ test('prioritizes nonzero stars and forks, and uses public topics when there is 
     repo('small', 0, {language: 'Go', license: {spdx_id: 'NOASSERTION'}, topics: ['cli', 'api']})], images);
   assert.deepEqual([...result.matchAll(/<img alt="([^"]+)"/g)].map(match => match[1]), ['8 Stars', '2 Forks', 'Python', 'Go', 'cli', 'api']);
   assert.equal(images.size, 6);
-  assert.equal(images.get('1-3.svg'), 'https://img.shields.io/badge/Python-3776ab?style=flat-square&logo=python&logoColor=white');
+  assert.ok([...images.values()].includes('https://img.shields.io/badge/Python-3776ab?style=flat-square&logo=python&logoColor=white'));
 });
 
 test('keeps an odd project in the left column without a placeholder', () => {

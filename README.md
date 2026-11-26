@@ -82,7 +82,7 @@ Vue               1 repo  ██░░░░░░░░░░░░░░░░
 <strong><a href="https://github.com/dmechai/dmechai">dmechai</a></strong>
 <br><sub>The source for this GitHub profile README.</sub>
 <ul><li><sub>Public projects ranked by stars and forks.</sub></li><li><sub>Commit and language charts, plus a light and dark contribution snake.</sub></li></ul>
-<img alt="JavaScript" src="assets/featured/1-1.svg"> <img alt="Activity Charts" src="assets/featured/1-2.svg"> <img alt="Contribution Snake" src="assets/featured/1-3.svg">
+<img alt="JavaScript" src="assets/featured/e716c5c602b6056b82755f4079155c97994a277c7c61c35b8293e2b76b854429.svg"> <img alt="Activity Charts" src="assets/featured/2de9588b11a55d0933054ec7d424547311bc8a450e4461f8a75919d67ee17bce.svg"> <img alt="Contribution Snake" src="assets/featured/daa58b2f468578fdd890b3069aedd195643f9ff4e70811ce42fa9307394877d6.svg">
 </td>
 </tr>
 </table>

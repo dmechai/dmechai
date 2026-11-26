@@ -1,4 +1,7 @@
-import { mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const escape = value => value.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch]);
@@ -19,7 +22,7 @@ export function featured(readme, owner, repos, images = new Map()) {
     && repo.private === false && repo.fork === false)
     .sort((a, b) => b.stargazers_count - a.stargazers_count || b.forks_count - a.forks_count || a.name.localeCompare(b.name, 'en'))
     .slice(0, MAX_PROJECTS);
-  const cards = selected.map((repo, rank) => {
+  const cards = selected.map(repo => {
     const isProfile = repo.name.toLowerCase() === owner.toLowerCase();
     const description = (typeof repo.description === 'string' ? repo.description.replace(/\s+/gu, ' ').trim() : '')
       || (isProfile ? 'The source for this GitHub profile README.' : '');
@@ -34,9 +37,10 @@ export function featured(readme, owner, repos, images = new Map()) {
       license && license !== 'NOASSERTION' && [license, ['License', license], '2e7d32'],
       ...(isProfile ? [['Activity Charts', ['Activity', 'Charts'], '0969da'], ['Contribution Snake', ['Contributions', 'Snake'], '2e7d32']] : []),
       ...(Array.isArray(repo.topics) ? repo.topics.filter(topic => typeof topic === 'string' && /^[\w-]{1,24}$/.test(topic)).map(topic => [topic, [topic], '555555']) : []),
-    ].filter(Boolean).slice(0, 3).map(([label, parts, color, logo, logoColor], i) => {
-      const name = `${rank + 1}-${i + 1}.svg`;
-      images.set(name, badgeUrl(parts, color, logo, logoColor));
+    ].filter(Boolean).slice(0, 3).map(([label, parts, color, logo, logoColor]) => {
+      const url = badgeUrl(parts, color, logo, logoColor);
+      const name = `${createHash('sha256').update(url).digest('hex')}.svg`;
+      images.set(name, url);
       return `<img alt="${escape(label)}" src="assets/featured/${name}">`;
     }).join(' ');
     return [
@@ -68,17 +72,16 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const source = readFileSync('README.md', 'utf8');
   const next = featured(source, owner, JSON.parse(readFileSync(inventory, 'utf8')), images);
   const dir = 'assets/featured';
-  const assets = await Promise.all([...images].map(async ([name, url]) => {
-    const response = await fetch(url, {signal: AbortSignal.timeout(15000)});
-    if (!response.ok || !response.headers.get('content-type')?.startsWith('image/svg+xml')) throw new Error(`Could not download badge ${name}: HTTP ${response.status}`);
-    const svg = await response.text();
+  const download = promisify(execFile);
+  const assets = await Promise.all([...images].filter(([name]) => !existsSync(`${dir}/${name}`)).map(async ([name, url]) => {
+    const {stdout: svg} = await download('curl', ['--ipv4', '--fail', '--silent', '--show-error', '--max-time', '12', '--retry', '2', '--retry-max-time', '30', url]);
     if (!/^<svg\b/.test(svg) || !svg.includes('</svg>')) throw new Error(`Invalid badge ${name}`);
     return [name, svg];
   }));
   mkdirSync(dir, {recursive: true});
   for (const [name, svg] of assets) writeFileSync(`${dir}/${name}`, svg);
   for (const name of readdirSync(dir)) {
-    if (/^[1-6]-[1-3]\.svg$/.test(name) && !images.has(name)) unlinkSync(`${dir}/${name}`);
+    if (/^(?:[1-6]-[1-3]|[a-f0-9]{64})\.svg$/.test(name) && !images.has(name)) unlinkSync(`${dir}/${name}`);
   }
   if (source !== next) writeFileSync('README.md', next);
 }
