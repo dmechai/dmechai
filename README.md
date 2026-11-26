@@ -35,36 +35,36 @@ Friday     281 commits  ███░░░░░░░░░░░░░░░�
 Saturday   104 commits  █░░░░░░░░░░░░░░░░░░░    6.4%
 ```
 
-<sub>Languages by repository coverage: 17 repositories. Each can count toward multiple languages.</sub>
+<sub>GitHub-detected languages.</sub>
 
 ```text
-Python       12 repos  ██████████████░░░░░░   70.6%
-Shell        12 repos  ██████████████░░░░░░   70.6%
-HTML          9 repos  ███████████░░░░░░░░░   52.9%
-JavaScript    8 repos  █████████░░░░░░░░░░░   47.1%
-CSS           6 repos  ███████░░░░░░░░░░░░░   35.3%
-Dockerfile    6 repos  ███████░░░░░░░░░░░░░   35.3%
-TypeScript    3 repos  ████░░░░░░░░░░░░░░░░   17.6%
-Go            2 repos  ██░░░░░░░░░░░░░░░░░░   11.8%
-Swift         2 repos  ██░░░░░░░░░░░░░░░░░░   11.8%
-Astro          1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+Python       12 repos  ████████████████████
+Shell        12 repos  ████████████████████
+HTML          9 repos  ███████████████░░░░░
+JavaScript    8 repos  █████████████░░░░░░░
+CSS           6 repos  ██████████░░░░░░░░░░
+Dockerfile    6 repos  ██████████░░░░░░░░░░
+TypeScript    3 repos  █████░░░░░░░░░░░░░░░
+Go            2 repos  ███░░░░░░░░░░░░░░░░░
+Swift         2 repos  ███░░░░░░░░░░░░░░░░░
+Astro          1 repo  ██░░░░░░░░░░░░░░░░░░
 ```
 
 <details>
 <summary>11 more languages</summary>
 
 ```text
-Java              1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-Kotlin            1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-Makefile          1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-NSIS              1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-Objective-C       1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-Objective-C++     1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-PowerShell        1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-PureBasic         1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-Ruby              1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-SCSS              1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
-Vue               1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+Java              1 repo  ██░░░░░░░░░░░░░░░░░░
+Kotlin            1 repo  ██░░░░░░░░░░░░░░░░░░
+Makefile          1 repo  ██░░░░░░░░░░░░░░░░░░
+NSIS              1 repo  ██░░░░░░░░░░░░░░░░░░
+Objective-C       1 repo  ██░░░░░░░░░░░░░░░░░░
+Objective-C++     1 repo  ██░░░░░░░░░░░░░░░░░░
+PowerShell        1 repo  ██░░░░░░░░░░░░░░░░░░
+PureBasic         1 repo  ██░░░░░░░░░░░░░░░░░░
+Ruby              1 repo  ██░░░░░░░░░░░░░░░░░░
+SCSS              1 repo  ██░░░░░░░░░░░░░░░░░░
+Vue               1 repo  ██░░░░░░░░░░░░░░░░░░
 ```
 
 </details>
