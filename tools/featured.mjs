@@ -8,32 +8,23 @@ export function featured(readme, owner, repos) {
   const cards = selected.map(repo => {
     const isProfile = repo.name.toLowerCase() === owner.toLowerCase();
     const description = (typeof repo.description === 'string' ? repo.description.replace(/\s+/gu, ' ').trim() : '')
-      || (isProfile ? 'My GitHub profile, with automatically refreshed project highlights and activity charts.' : '');
+      || (isProfile ? 'The source for this GitHub profile README.' : '');
     const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}`;
     const license = repo.license?.spdx_id;
-    const badges = [['Stars', repo.stargazers_count], ['Forks', repo.forks_count], ['Language', repo.language], ['License', license === 'NOASSERTION' ? null : license]]
-      .filter(([, value]) => value != null && value !== '')
-      .map(([label, value]) => {
-        const text = encodeURIComponent(String(value).replaceAll('-', '--').replaceAll('_', '__'));
-        return `<img alt="${label}: ${escape(String(value))}" src="https://img.shields.io/badge/${label}-${text}-444444?style=flat-square">`;
-      });
-    const highlights = isProfile ? [
-      'Automatically ranks public projects by stars and forks.',
-      'Summarizes commit activity and repository languages.',
-      'Animates the last 53 weeks of commit activity in light and dark themes.',
-    ] : [];
+    const metadata = [repo.language, license === 'NOASSERTION' ? null : license,
+      repo.stargazers_count > 0 ? `${repo.stargazers_count} ${repo.stargazers_count === 1 ? 'star' : 'stars'}` : null,
+      repo.forks_count > 0 ? `${repo.forks_count} ${repo.forks_count === 1 ? 'fork' : 'forks'}` : null,
+    ].filter(Boolean).map(escape).join(' &middot; ');
     return [
-      '<table><tr><td align="left">',
-      `<p><strong><a href="${url}">${escape(repo.name)}</a></strong>${description ? `<br><sub>${escape(description)}</sub>` : ''}${badges.length ? `<br>${badges.join(' ')}` : ''}</p>`,
-      ...(highlights.length ? [
-        '<strong><sub>Features</sub></strong>',
-        `<ul>${highlights.map(text => `<li><sub>${escape(text)}</sub></li>`).join('')}</ul>`,
-        `<p><sub><a href="https://github.com/${encodeURIComponent(owner)}">View profile</a></sub></p>`,
-      ] : []),
+      '<table align="center"><tr><td align="left">',
+      `<strong><a href="${url}">${escape(repo.name)}</a></strong>`,
+      ...(description ? [`<br><sub>${escape(description)}</sub>`] : []),
+      ...(isProfile ? ['<ul><li><sub>Public projects ranked by stars and forks.</sub></li><li><sub>Commit and language charts, plus a light and dark contribution snake.</sub></li></ul>'] : []),
+      ...(metadata ? [`${isProfile ? '' : '<br>'}<sub>${metadata}</sub>`] : []),
       '</td></tr></table>',
     ].join('\n');
   });
-  const content = cards.length ? `\n### <ins><sup>FEATURED PROJECTS</sup></ins>\n\n<div align="left">\n${cards.join('\n')}\n</div>\n` : '';
+  const content = cards.length ? `\n### <ins><sup>FEATURED PROJECTS</sup></ins>\n\n${cards.join('\n\n')}\n` : '';
   const start = '<!-- featured-projects:start -->';
   const end = '<!-- featured-projects:end -->';
   const from = readme.indexOf(start);
