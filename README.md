@@ -2,4 +2,7 @@
 
 <p align="center"><a href="https://github.com/dmechai?tab=repositories">Repositories</a></p>
 
-<!-- Add your own introduction or updates here. Select featured repositories using GitHub's profile pins. -->
+<!-- Add your own introduction or updates outside the generated block. See tools/README.md. -->
+
+<!-- featured-projects:start -->
+<!-- featured-projects:end -->
