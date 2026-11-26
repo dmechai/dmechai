@@ -1,10 +1,6 @@
 <h1 align="center"><em>Hi, I'm dmechai</em></h1>
 
-<!-- profile-metrics:start -->
-
-<p align="center"><samp>5 PUBLIC REPOSITORIES &nbsp;&middot;&nbsp; 1 FOLLOWER</samp></p>
-
-<!-- profile-metrics:end -->
+This private repository preserves the former GitHub profile README. Edit this file directly to change its content. The charts and animation below are snapshots and no longer refresh automatically.
 
 <!-- contact:start -->
 
@@ -27,7 +23,7 @@
 
 **Commits by day of week**
 
-Last 90 UTC calendar days · GitHub commit contributions
+Last 90 UTC calendar days at the time of the snapshot · GitHub commit contributions
 
 ```text
 Sunday       0 commits  ░░░░░░░░░░░░░░░░░░░░    0.0%
@@ -65,5 +61,7 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
   <source media="(prefers-color-scheme: dark)" srcset="assets/snake-dark.svg">
   <img alt="GitHub contribution snake" src="assets/snake.svg">
 </picture>
+
+<sub>Animation generated with <a href="https://github.com/Platane/snk">Platane/snk</a>.</sub>
 
 <!-- snake:end -->
