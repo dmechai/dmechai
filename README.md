@@ -8,11 +8,11 @@
 
 ### <sup>LET'S CONNECT!</sup>
 
-<!-- contact:start -->
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/dmechai)
-[![Repositories](https://img.shields.io/badge/Repositories-444444?style=flat&logo=github&logoColor=white)](https://github.com/dmechai?tab=repositories)
+Visit [my website](https://dmechai.com/) or connect with me on:
 
-**待填写（可选）**：添加网站、邮箱或社交链接。
+<!-- contact:start -->
+[![Email](https://img.shields.io/badge/Email-444444?style=flat&logo=gmail&logoColor=white)](mailto:hey.dmechai@gmail.com)
+[![X](https://img.shields.io/badge/X-444444?style=flat&logo=x&logoColor=white)](https://x.com/0xdmechai)
 <!-- contact:end -->
 
 <br>
@@ -22,9 +22,6 @@
 <br>
 
 <!-- tech-stack:start -->
-### <ins><sup>MY TECH STACK</sup></ins>
-
-**待填写**：列出常用技术，可按语言、前端、后端或工具分组。
 <!-- tech-stack:end -->
 
 <br>
@@ -69,9 +66,6 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 <br>
 
 <!-- featured-projects:start -->
-### <ins><sup>FEATURED PROJECTS</sup></ins>
-
-**待选择**：选几个项目，填上名称、链接和一句简介。
 <!-- featured-projects:end -->
 
 <br>
