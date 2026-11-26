@@ -23,12 +23,14 @@ export function featured(readme, owner, repos) {
       'Animates the last 53 weeks of commit activity in light and dark themes.',
     ] : [];
     return [
+      '<table><tr><td align="left">',
       `<p><strong><a href="${url}">${escape(repo.name)}</a></strong>${description ? `<br><sub>${escape(description)}</sub>` : ''}${badges.length ? `<br>${badges.join(' ')}` : ''}</p>`,
       ...(highlights.length ? [
         '<strong><sub>Features</sub></strong>',
         `<ul>${highlights.map(text => `<li><sub>${escape(text)}</sub></li>`).join('')}</ul>`,
         `<p><sub><a href="https://github.com/${encodeURIComponent(owner)}">View profile</a></sub></p>`,
       ] : []),
+      '</td></tr></table>',
     ].join('\n');
   });
   const content = cards.length ? `\n### <ins><sup>FEATURED PROJECTS</sup></ins>\n\n<div align="left">\n${cards.join('\n')}\n</div>\n` : '';

@@ -53,10 +53,12 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 ### <ins><sup>FEATURED PROJECTS</sup></ins>
 
 <div align="left">
+<table><tr><td align="left">
 <p><strong><a href="https://github.com/dmechai/dmechai">dmechai</a></strong><br><sub>My GitHub profile, with automatically refreshed project highlights and activity charts.</sub><br><img alt="Stars: 0" src="https://img.shields.io/badge/Stars-0-444444?style=flat-square"> <img alt="Forks: 0" src="https://img.shields.io/badge/Forks-0-444444?style=flat-square"> <img alt="Language: JavaScript" src="https://img.shields.io/badge/Language-JavaScript-444444?style=flat-square"></p>
 <strong><sub>Features</sub></strong>
 <ul><li><sub>Automatically ranks public projects by stars and forks.</sub></li><li><sub>Summarizes commit activity and repository languages.</sub></li><li><sub>Animates the last 53 weeks of commit activity in light and dark themes.</sub></li></ul>
 <p><sub><a href="https://github.com/dmechai">View profile</a></sub></p>
+</td></tr></table>
 </div>
 
 <!-- featured-projects:end -->
