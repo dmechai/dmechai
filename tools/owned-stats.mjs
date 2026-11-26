@@ -55,11 +55,13 @@ export function aggregate(readme, owner, repos, viewer, from, to) {
   const ranked = [...languages].sort(([a, x], [b, y]) => y - x || a.localeCompare(b, 'en'));
   const commits = chart(weekdays.map((label, i) => [label, days[i]]), 'commit');
   const byLanguage = chart(ranked, 'repo');
-  const sections = [];
-  if (commits) sections.push('**Commits by day of week**', 'Last 90 UTC calendar days · GitHub commit contributions', commits);
-  if (byLanguage) sections.push('**Repositories by primary language**', 'GitHub-detected primary languages', byLanguage);
-  const content = sections.length ? ['---', '<h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>',
-    '<sub>Aggregate stats across owned public and private repositories (excluding forks and this profile).</sub>', ...sections].join('\n\n') : '';
+  const content = ['---', '<h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>',
+    '<sub>Aggregate stats across owned public and private repositories (excluding forks and this repository).</sub>',
+    '**Commits by day of week**', 'Last 90 UTC calendar days · GitHub commit contributions',
+    commits || '> No qualifying commit contributions returned by GitHub for this period.',
+    '**Repositories by primary language**', 'GitHub-detected primary languages',
+    byLanguage || '> No primary languages detected for the repositories counted.',
+  ].join('\n\n');
   const start = '<!-- owned-stats:start -->';
   const end = '<!-- owned-stats:end -->';
   const fromBlock = readme.indexOf(start);
@@ -67,7 +69,7 @@ export function aggregate(readme, owner, repos, viewer, from, to) {
   if (fromBlock < 0 || toBlock < fromBlock || readme.lastIndexOf(start) !== fromBlock || readme.lastIndexOf(end) !== toBlock) {
     throw new Error('Expected one pair of aggregate chart markers');
   }
-  return readme.slice(0, fromBlock + start.length) + (content ? `\n\n${content}\n\n` : '\n') + readme.slice(toBlock);
+  return readme.slice(0, fromBlock + start.length) + `\n\n${content}\n\n` + readme.slice(toBlock);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

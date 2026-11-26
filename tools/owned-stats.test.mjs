@@ -22,6 +22,15 @@ test('combines public and private repositories without emitting repository ident
   assert.doesNotMatch(result, /fixture|Rust|Ruby|Scala|101|102|https:/);
 });
 
+test('keeps both chart headings visible without data and preserves handwritten text', () => {
+  const source = `Intro\n\n${readme}\n\nProjects`;
+  const result = aggregate(source, 'demo', [], viewer([]), from, to);
+  assert.match(result, /Commits by day of week[\s\S]+No qualifying commit contributions/);
+  assert.match(result, /Repositories by primary language[\s\S]+No primary languages detected/);
+  assert.ok(result.startsWith('Intro\n\n'));
+  assert.ok(result.endsWith('\n\nProjects'));
+});
+
 test('refuses an incomplete contribution result or wrong account', () => {
   assert.throws(() => aggregate(readme, 'demo', [repo(101, 'private-fixture', 'Go')], viewer([group(101, 2, true)]), from, to), /incomplete/);
   assert.throws(() => aggregate(readme, 'other', [], viewer([]), from, to), /Wrong GitHub account/);
