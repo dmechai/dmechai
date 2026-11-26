@@ -35,16 +35,39 @@ Friday     281 commits  ███░░░░░░░░░░░░░░░�
 Saturday   104 commits  █░░░░░░░░░░░░░░░░░░░    6.4%
 ```
 
-<sub>GitHub-detected primary languages.</sub>
+<sub>Languages by repository coverage: 17 repositories. Each can count toward multiple languages.</sub>
 
 ```text
-Python        9 repos  ████████████░░░░░░░░   60.0%
-Shell         2 repos  ███░░░░░░░░░░░░░░░░░   13.3%
-Go             1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
-HTML           1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
-JavaScript     1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
-TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+Python       12 repos  ██████████████░░░░░░   70.6%
+Shell        12 repos  ██████████████░░░░░░   70.6%
+HTML          9 repos  ███████████░░░░░░░░░   52.9%
+JavaScript    8 repos  █████████░░░░░░░░░░░   47.1%
+CSS           6 repos  ███████░░░░░░░░░░░░░   35.3%
+Dockerfile    6 repos  ███████░░░░░░░░░░░░░   35.3%
+TypeScript    3 repos  ████░░░░░░░░░░░░░░░░   17.6%
+Go            2 repos  ██░░░░░░░░░░░░░░░░░░   11.8%
+Swift         2 repos  ██░░░░░░░░░░░░░░░░░░   11.8%
+Astro          1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
 ```
+
+<details>
+<summary>11 more languages</summary>
+
+```text
+Java              1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+Kotlin            1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+Makefile          1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+NSIS              1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+Objective-C       1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+Objective-C++     1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+PowerShell        1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+PureBasic         1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+Ruby              1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+SCSS              1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+Vue               1 repo  █░░░░░░░░░░░░░░░░░░░    5.9%
+```
+
+</details>
 
 <!-- fun-facts:end -->
 
