@@ -64,6 +64,22 @@ test('counts only unique recent pushes to still-public owned repos in UTC', () =
   assert.equal(sync(result, [[]], 'dmechai', options), base);
 });
 
+test('CMS selection publishes only public projects and renders explicitly entered contact links', () => {
+  const base = template + '<!-- contact:start -->\n<!-- contact:end -->\n';
+  const field = {name: 'featured', options: {values: []}};
+  const cms = {content: [{name: 'profile', fields: [field]}]};
+  const pages = [[repo('selected', {topics: []}), repo('not-selected'), repo('private', {private: true, visibility: 'private'})]];
+  const result = sync(base, pages, 'dmechai', {cms, profile: {
+    featured: ['selected', 'private'], website: 'https://example.com/?a=1&b=2', email: 'hello@example.com',
+  }});
+  assert.match(result, /example\.com\/\?a=1&amp;b=2/);
+  assert.match(result, /mailto:hello@example\.com/);
+  assert.match(result, /github\.com\/dmechai\/selected/);
+  assert.doesNotMatch(result, /not-selected|\/private/);
+  assert.deepEqual(field.options.values, ['not-selected', 'selected']);
+  assert.throws(() => sync(base, pages, 'dmechai', {profile: {website: 'javascript:alert(1)'}}), /HTTPS/);
+});
+
 test('rejects bad response and ambiguous markers', () => {
   assert.throws(() => sync(template, {}, 'dmechai'), /Invalid/);
   assert.throws(() => sync(template + template, [[]], 'dmechai'), /markers/);

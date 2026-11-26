@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const count = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;
@@ -11,7 +11,7 @@ const bar = pct => {
   return '█'.repeat(filled) + '░'.repeat(20 - filled);
 };
 
-function techBlock({favorites, other}) {
+function techBlock({favorites = [], other = {}}) {
   const badges = values => values.map(label => {
     if (typeof label !== 'string' || !label.trim() || label.length > 60 || /[\r\n]/.test(label)) {
       throw new Error('Invalid tech stack label');
@@ -20,8 +20,10 @@ function techBlock({favorites, other}) {
     return `<img alt="${escape(label)}" src="https://img.shields.io/badge/${slug}-444444?style=flat-square">`;
   }).join(' ');
   const fav = badges(favorites);
-  const groups = Object.entries(other).filter(([, values]) => values.length)
-    .map(([group, values]) => `<p><sup>${escape(group)}</sup><br>\n${badges(values)}</p>`);
+  const titles = {databases_cloud: 'Databases & Cloud', data_ai: 'Data Science & AI',
+    design_productivity: 'Design & Productivity', devops_vcs: 'DevOps & Version Control'};
+  const groups = Object.entries(other).filter(([, values]) => Array.isArray(values) && values.length)
+    .map(([group, values]) => `<p><sup>${escape(Object.hasOwn(titles, group) ? titles[group] : group)}</sup><br>\n${badges(values)}</p>`);
   if (!fav && !groups.length) return '';
   const more = groups.length ? `\n\n<details>\n<summary><sup>OTHER TECHNOLOGIES USED</sup></summary>\n\n${groups.join('\n\n')}\n\n</details>` : '';
   return `---\n\n${heading('MY TECH STACK')}${fav ? `\n\n<p><sup>PERSONAL FAVS:</sup><br>\n${fav}</p>` : ''}${more}`;
@@ -82,14 +84,44 @@ export function replaceBlock(readme, name, content) {
   return readme.slice(0, start + begin.length) + (content ? `\n\n${content}\n\n` : '\n') + readme.slice(stop);
 }
 
-export function sync(readme, pages, owner, {account, languages = () => ({}), stack, events, now = Date.now()} = {}) {
+function contactBlock(owner, profile) {
+  const root = `https://github.com/${owner}`;
+  const links = [['GitHub', root], ['Repositories', `${root}?tab=repositories`]];
+  for (const [field, label] of Object.entries({website: 'Website', linkedin: 'LinkedIn', codepen: 'CodePen', instagram: 'Instagram'})) {
+    const value = profile[field]?.trim();
+    if (!value) continue;
+    const url = new URL(value);
+    if (url.protocol !== 'https:' || url.username || url.password) throw new Error(`Expected a public HTTPS URL for ${field}`);
+    links.push([label, url.href]);
+  }
+  const email = profile.email?.trim();
+  if (email) {
+    if (!/^[a-z\d.!#$%&'*+/=^_`{|}~-]+@[a-z\d-]+(?:\.[a-z\d-]+)+$/i.test(email)) throw new Error('Invalid public email address');
+    links.push(['Email', `mailto:${encodeURIComponent(email.split('@')[0])}@${email.split('@')[1]}`]);
+  }
+  return `<h3 align="center"><sup>LET'S CONNECT!</sup></h3>\n\n<p align="center">${links.map(([label, url]) => `<a href="${escape(url)}">${label}</a>`).join(' &middot; ')}</p>`;
+}
+
+const snakeBlock = `<h3 align="center"><ins><sup>CONTRIBUTION ACTIVITY</sup></ins></h3>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/snake-dark.svg">
+  <img alt="GitHub contribution snake" src="assets/snake.svg">
+</picture>`;
+
+export function sync(readme, pages, owner, {account, languages = () => ({}), stack, events, now = Date.now(), profile, cms, snake = false} = {}) {
   if (!/^[a-z\d][a-z\d-]*$/i.test(owner) || !Array.isArray(pages) || !pages.length || !pages.every(Array.isArray)) {
     throw new Error('Invalid GitHub repository response');
   }
   const publicRepos = pages.flat().filter(repo => repo.private === false && repo.visibility === 'public'
     && repo.owner?.login?.toLowerCase() === owner.toLowerCase() && typeof repo.name === 'string'
     && /^[a-z\d_.-]+$/i.test(repo.name) && ![owner.toLowerCase(), '.', '..'].includes(repo.name.toLowerCase()));
-  const repos = publicRepos.filter(repo => Array.isArray(repo.topics) && repo.topics.includes('profile-featured'));
+  const selected = new Set(Array.isArray(profile?.featured) ? profile.featured : []);
+  const repos = publicRepos.filter(repo => profile ? selected.has(repo.name) : repo.topics?.includes('profile-featured'));
+  if (cms) {
+    cms.content.find(item => item.name === 'profile').fields.find(field => field.name === 'featured').options.values =
+      publicRepos.map(repo => repo.name).sort((a, b) => a.localeCompare(b, 'en'));
+  }
   repos.sort((a, b) => a.name.localeCompare(b.name, 'en'));
   const cards = repos.map(repo => {
     const url = `https://github.com/${owner}/${repo.name}`;
@@ -113,6 +145,8 @@ export function sync(readme, pages, owner, {account, languages = () => ({}), sta
   const languageBlock = rows.length ? `\n\n${heading('LANGUAGES')}\n\n\`\`\`text\n${rows.join('\n')}\n\`\`\`` : '';
   const block = cards.length ? `---\n\n<h2 align="center"><ins><sup>Featured Projects</sup></ins></h2>\n\n<table>\n${cards.join('\n')}\n</table>${languageBlock}` : '';
   let result = replaceBlock(readme, 'featured-projects', block);
+  if (profile) result = replaceBlock(result, 'contact', contactBlock(owner, profile));
+  if (snake) result = replaceBlock(result, 'snake', snakeBlock);
   if (stack) result = replaceBlock(result, 'tech-stack', techBlock(stack));
   if (events) {
     const ids = new Set(publicRepos.map(repo => repo.id).filter(Number.isSafeInteger));
@@ -136,11 +170,19 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const events = original.includes('<!-- owned-stats:start -->') ? undefined : execFileSync('gh', [
     'api', '--paginate', '--jq', '.[]', `users/${owner}/events/public?per_page=100`,
   ], {encoding: 'utf8', timeout: 30_000, maxBuffer: 8 * 1024 * 1024}).split('\n').filter(line => line.trim()).map(line => JSON.parse(line));
+  const profile = JSON.parse(readFileSync(new URL('./profile.json', import.meta.url), 'utf8'));
+  const cmsPath = new URL('../.pages.yml', import.meta.url);
+  const cmsOriginal = readFileSync(cmsPath, 'utf8');
+  const cms = JSON.parse(cmsOriginal);
   const next = sync(original, pages, owner, {
+    profile, cms,
+    snake: ['snake.svg', 'snake-dark.svg'].every(name => existsSync(new URL(`../assets/${name}`, import.meta.url))),
     account: api(`users/${owner}`),
     languages: name => api(`repos/${owner}/${name}/languages`),
     stack: JSON.parse(readFileSync(new URL('./tech-stack.json', import.meta.url), 'utf8')),
     events,
   });
   if (original !== next) writeFileSync(path, next);
+  const cmsNext = `${JSON.stringify(cms, null, 2)}\n`;
+  if (cmsOriginal !== cmsNext) writeFileSync(cmsPath, cmsNext);
 }

@@ -4,9 +4,9 @@
     "Languages": [],
     "Frontend": [],
     "Backend": [],
-    "Databases & Cloud": [],
-    "Data Science & AI": [],
-    "Design & Productivity": [],
-    "DevOps & Version Control": []
+    "databases_cloud": [],
+    "data_ai": [],
+    "design_productivity": [],
+    "devops_vcs": []
   }
 }

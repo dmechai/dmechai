@@ -6,9 +6,13 @@
 
 <!-- profile-metrics:end -->
 
+<!-- contact:start -->
+
 <h3 align="center"><sup>LET'S CONNECT!</sup></h3>
 
-<p align="center">Find me on <a href="https://github.com/dmechai">GitHub</a> or browse my <a href="https://github.com/dmechai?tab=repositories">public repositories</a>.</p>
+<p align="center"><a href="https://github.com/dmechai">GitHub</a> &middot; <a href="https://github.com/dmechai?tab=repositories">Repositories</a></p>
+
+<!-- contact:end -->
 
 <!-- tech-stack:start -->
 <!-- tech-stack:end -->
@@ -52,3 +56,6 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 
 <!-- featured-projects:start -->
 <!-- featured-projects:end -->
+
+<!-- snake:start -->
+<!-- snake:end -->
