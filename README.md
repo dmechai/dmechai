@@ -50,29 +50,14 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 
 <!-- featured-projects:start -->
 
-<br>
+### <ins><sup>FEATURED PROJECTS</sup></ins>
 
----
-
-<br>
-
-## 🚀 Featured Projects
-
-<table>
-<tr>
-<td align="left" valign="top">
-<h3><a href="https://github.com/dmechai/dmechai">dmechai</a></h3>
-<p>My GitHub profile, with project highlights and a contribution calendar.</p>
-<p><img alt="Stars: 0" src="https://img.shields.io/badge/Stars-0-444444?style=flat-square"> <img alt="Forks: 0" src="https://img.shields.io/badge/Forks-0-444444?style=flat-square"> <img alt="Language: JavaScript" src="https://img.shields.io/badge/Language-JavaScript-444444?style=flat-square"></p>
-</td>
-</tr>
-</table>
-
-<br>
-
----
-
-<br>
+<div align="left">
+<p><strong><a href="https://github.com/dmechai/dmechai">dmechai</a></strong><br><sub>My GitHub profile, with automatically refreshed project highlights and activity charts.</sub><br><img alt="Stars: 0" src="https://img.shields.io/badge/Stars-0-444444?style=flat-square"> <img alt="Forks: 0" src="https://img.shields.io/badge/Forks-0-444444?style=flat-square"> <img alt="Language: JavaScript" src="https://img.shields.io/badge/Language-JavaScript-444444?style=flat-square"></p>
+<strong><sub>Features</sub></strong>
+<ul><li><sub>Automatically ranks public projects by stars and forks.</sub></li><li><sub>Summarizes commit activity and repository languages.</sub></li><li><sub>Animates the last 53 weeks of commit activity in light and dark themes.</sub></li></ul>
+<p><sub><a href="https://github.com/dmechai">View profile</a></sub></p>
+</div>
 
 <!-- featured-projects:end -->
 

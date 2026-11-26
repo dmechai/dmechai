@@ -15,13 +15,23 @@ test('selects the six highest-ranked public repositories and hides private ones'
   assert.ok(result.startsWith('Before\n') && result.endsWith('\nAfter'));
 });
 
-test('renders a single profile card with a description and no blank column', () => {
+test('renders one compact left-aligned profile entry with verified details', () => {
   const result = featured(readme, 'demo', [repo('demo', 0, {language: 'JavaScript'})]);
-  assert.match(result, /Featured Projects/);
-  assert.match(result, /My GitHub profile, with project highlights and a contribution calendar/);
+  assert.match(result, /### <ins><sup>FEATURED PROJECTS<\/sup><\/ins>/);
+  assert.match(result, /<div align="left">\n<p><strong><a href="https:\/\/github\.com\/demo\/demo">demo/);
+  assert.match(result, /<sub>My GitHub profile, with automatically refreshed project highlights and activity charts\.<\/sub>/);
   assert.match(result, /Language-JavaScript/);
-  assert.equal([...result.matchAll(/<td\b/g)].length, 1);
-  assert.doesNotMatch(result, /No description/);
+  assert.match(result, /<li><sub>Summarizes commit activity and repository languages\.<\/sub><\/li>/);
+  assert.match(result, /View profile/);
+  assert.doesNotMatch(result, /<table|<td|^---$|License-|No description/m);
+  assert.equal(featured(result, 'demo', [repo('demo', 0, {language: 'JavaScript'})]), result);
+});
+
+test('uses the public description and license when available', () => {
+  const result = featured(readme, 'demo', [repo('public-tool', 5, {description: 'A <tool> & examples', license: {spdx_id: 'MIT'}})]);
+  assert.match(result, /<sub>A &lt;tool&gt; &amp; examples<\/sub>/);
+  assert.match(result, /License-MIT/);
+  assert.doesNotMatch(result, /<li>|View profile/);
 });
 
 test('hides the section when no public repository exists', () => {
