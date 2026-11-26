@@ -30,7 +30,26 @@
 
 <h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>
 
-> **暂无公开数据**：这里只显示 GitHub 公开仓库的公开统计，不会读取私有仓库。
+<sub>Aggregate totals only. Private repository names, links, and individual activity are not shown.</sub>
+
+**Commits by day of week**
+
+Last 90 UTC calendar days · GitHub commit contributions
+
+> No qualifying commit contributions returned by GitHub for this period.
+
+**Repositories by primary language**
+
+GitHub-detected primary languages
+
+```text
+Python        9 repos  ████████████░░░░░░░░   60.0%
+Shell         2 repos  ███░░░░░░░░░░░░░░░░░   13.3%
+Go             1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+HTML           1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+JavaScript     1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░░    6.7%
+```
 
 <!-- fun-facts:end -->
 
