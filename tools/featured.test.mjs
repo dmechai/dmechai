@@ -23,8 +23,7 @@ test('renders one compact left-aligned profile entry with verified details', () 
   assert.match(result, /<div align="left">\n<table>\n<tr>\n<td width="400" align="left" valign="top">\n<strong><a href="https:\/\/github\.com\/demo\/demo">demo/);
   assert.equal([...result.matchAll(/<td\b/g)].length, 1);
   assert.match(result, /<sub>The source for this GitHub profile README\.<\/sub>/);
-  assert.match(result, /featured-javascript\.svg[^>]*> JavaScript<\/code>/);
-  assert.match(result, /<code>★ 0 Stars<\/code>/);
+  assert.deepEqual([...result.matchAll(/<img alt="([^"]+)"/g)].map(match => match[1]), ['JavaScript', 'Activity Charts', 'Contribution Snake']);
   assert.equal([...result.matchAll(/<li>/g)].length, 2);
   assert.doesNotMatch(result, /^---$|View profile|0 Forks|⚖/m);
   assert.equal(featured(result, 'demo', [repo('demo', 0, {language: 'JavaScript'})]), result);
@@ -33,9 +32,17 @@ test('renders one compact left-aligned profile entry with verified details', () 
 test('uses the public description and license when available', () => {
   const result = featured(readme, 'demo', [repo('public-tool', 5, {language: 'Python', description: 'A <tool> & examples', license: {spdx_id: 'MIT'}})]);
   assert.match(result, /<sub>A &lt;tool&gt; &amp; examples<\/sub>/);
-  assert.match(result, /featured-python\.svg[^>]*> Python<\/code>/);
-  assert.match(result, /<code>⚖ MIT<\/code>/);
+  assert.deepEqual([...result.matchAll(/<img alt="([^"]+)"/g)].map(match => match[1]), ['5 Stars', 'Python', 'MIT']);
   assert.doesNotMatch(result, /<li>|View profile/);
+});
+
+test('prioritizes nonzero stars and forks, and uses public topics when there is room', () => {
+  const images = new Map();
+  const result = featured(readme, 'demo', [repo('popular', 8, {forks_count: 2, language: 'Python', topics: ['cli']}),
+    repo('small', 0, {language: 'Go', license: {spdx_id: 'NOASSERTION'}, topics: ['cli', 'api']})], images);
+  assert.deepEqual([...result.matchAll(/<img alt="([^"]+)"/g)].map(match => match[1]), ['8 Stars', '2 Forks', 'Python', 'Go', 'cli', 'api']);
+  assert.equal(images.size, 6);
+  assert.match(images.get('1-3.svg'), /Python/);
 });
 
 test('keeps an odd project in the left column without a placeholder', () => {

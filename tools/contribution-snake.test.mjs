@@ -5,10 +5,16 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { contributionGrid, snakeRoute, writeContributionSnakes } from './contribution-snake.mjs';
 
-test('visits every calendar cell with adjacent steps and closes the loop', () => {
-  const route = snakeRoute();
+test('pursues nearby green cells without scanning the calendar and closes the loop', () => {
+  const cells = Array(53 * 7).fill(0);
+  cells[3 * 7 + 1] = 1;
+  cells[4 * 7 + 1] = 3;
+  cells[8 * 7 + 4] = 2;
+  const route = snakeRoute(cells);
   assert.deepEqual(route[0], route.at(-1));
-  assert.equal(new Set(route.slice(1, 1 + 53 * 7).map(point => point.join(','))).size, 53 * 7);
+  assert.deepEqual(route.filter(([x, y]) => x >= 0 && cells[x * 7 + y]), [[3, 1], [4, 1], [8, 4]]);
+  assert.ok(route.length < 30);
+  assert.deepEqual(snakeRoute(Array(53 * 7).fill(0)), [[-1, 0]]);
   for (let i = 1; i < route.length; i++) {
     assert.equal(Math.abs(route[i][0] - route[i - 1][0]) + Math.abs(route[i][1] - route[i - 1][1]), 1);
   }

@@ -35,22 +35,52 @@ export function contributionGrid(commits, now = Date.now()) {
   return {start, today, cells, commits: counts.reduce((sum, count) => sum + count, 0)};
 }
 
-export function snakeRoute() {
+export function snakeRoute(cells) {
   const route = [[-1, 0]];
-  for (let x = 0; x < WEEKS; x++) {
-    for (let i = 0; i < DAYS; i++) route.push([x, x % 2 ? DAYS - 1 - i : i]);
+  const key = ([x, y]) => `${x},${y}`;
+  const food = new Set(cells.flatMap((level, i) => level ? [key([Math.floor(i / DAYS), i % DAYS])] : []));
+  if (!food.size) return route;
+
+  function advance(targets) {
+    const start = route.at(-1);
+    const queue = [{point: start, parent: null}];
+    const seen = new Set([key(start)]);
+    if (route.length > 1) seen.add(key(route.at(-2)));
+    for (let i = 0; i < queue.length; i++) {
+      const node = queue[i];
+      const [x, y] = node.point;
+      if (targets.has(key(node.point))) {
+        const path = [];
+        for (let step = node; step.parent; step = step.parent) path.push(step.point);
+        route.push(...path.reverse());
+        return key(node.point);
+      }
+      for (const point of [[x + 1, y], [x, y + 1], [x, y - 1], [x - 1, y]]) {
+        const [nx, ny] = point;
+        const id = key(point);
+        if (nx < -1 || nx >= WEEKS || ny < 0 || ny >= DAYS || seen.has(id)) continue;
+        seen.add(id);
+        queue.push({point, parent: node});
+      }
+    }
+    throw new Error('Unreachable contribution cell');
   }
-  route.push([WEEKS, DAYS - 1], [WEEKS, DAYS]);
-  for (let x = WEEKS - 1; x >= -1; x--) route.push([x, DAYS]);
-  for (let y = DAYS - 1; y >= 0; y--) route.push([-1, y]);
+
+  while (food.size) food.delete(advance(food));
+  advance(new Set([key(route[0])]));
   return route;
 }
 
 function svg(cells, theme) {
   const cell = 16;
   const step = 95;
-  const route = snakeRoute();
-  const duration = (route.length - 1) * step;
+  const route = snakeRoute(cells);
+  const firstVisit = new Map();
+  route.forEach(([x, y], i) => {
+    const id = `${x},${y}`;
+    if (!firstVisit.has(id)) firstVisit.set(id, i);
+  });
+  const duration = Math.max(1, route.length - 1) * step;
   const dark = theme === 'dark';
   const colors = dark ? ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'] : ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'];
   const rects = [];
@@ -60,7 +90,7 @@ function svg(cells, theme) {
       const color = cells[x * DAYS + y];
       const id = `c${x * DAYS + y}`;
       if (color) {
-        const eatenAt = 1 + x * DAYS + (x % 2 ? DAYS - 1 - y : y);
+        const eatenAt = firstVisit.get(`${x},${y}`);
         const t = (100 * eatenAt / (route.length - 1)).toFixed(5);
         styles.push(`@keyframes ${id}{from{fill:${colors[color]}}${t}%,to{fill:${colors[0]}}}.c.${id}{fill:${colors[color]};animation-name:${id}}`);
       }

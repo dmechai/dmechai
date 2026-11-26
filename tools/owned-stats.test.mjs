@@ -22,16 +22,18 @@ test('counts every current-branch commit once and excludes forks, profile, and f
   const result = aggregate(readme, 'demo', repos, commits);
   assert.match(result, /FUN FACTS[\s\S]+Tuesday\s+2 commits[^\n]+66\.7%/);
   assert.match(result, /Friday\s+1 commit[^\n]+33\.3%/);
-  assert.match(result, /3 repositories\. Each can count toward multiple languages/);
-  assert.match(result, /Python\s+1 repo[^\n]+33\.3%/);
-  assert.match(result, /Shell\s+2 repos[^\n]+66\.7%/);
+  assert.match(result, /GitHub-detected languages/);
+  const languages = result.split('GitHub-detected languages')[1];
+  assert.match(languages, /Python\s+1 repo[^\n]*██████████░░░░░░░░░░/);
+  assert.match(languages, /Shell\s+2 repos[^\n]*████████████████████/);
+  assert.doesNotMatch(languages, /%|3 repositories/);
   assert.doesNotMatch(result, /fixture|Rust|Ruby|Scala|Empty|101|102|https:/);
 });
 
 test('keeps the leading ten languages visible and folds the rest', () => {
   const languages = Object.fromEntries(Array.from({length: 12}, (_, i) => [`Lang${String(i).padStart(2, '0')}`, 128]));
   const result = aggregate(readme, 'demo', [repo(1, 'sample', languages)], []);
-  assert.match(result, /Lang09[^\n]+100\.0%[\s\S]+<summary>2 more languages<\/summary>[\s\S]+Lang11[^\n]+100\.0%/);
+  assert.match(result, /Lang09[^\n]+1 repo[\s\S]+<summary>2 more languages<\/summary>[\s\S]+Lang11[^\n]+1 repo/);
 });
 
 test('keeps both chart headings visible without data and preserves handwritten text', () => {

@@ -10,14 +10,15 @@ const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 const eligible = (owner, repos) => repos.filter(repo => repo.owner?.login?.toLowerCase() === owner.toLowerCase()
   && repo.fork === false && repo.name?.toLowerCase() !== owner.toLowerCase());
 
-function chart(rows, unit, total = rows.reduce((sum, [, n]) => sum + n, 0)) {
+function chart(rows, unit, max = null) {
+  const total = max ?? rows.reduce((sum, [, n]) => sum + n, 0);
   if (!total || !rows.length) return '';
   const width = Math.max(...rows.map(([label]) => label.length));
   return ['```text', ...rows.map(([label, n]) => {
     const share = 100 * n / total;
     const blocks = Math.round(share / 5);
     const quantity = `${n} ${unit}${n === 1 ? '' : 's'}`.padStart(unit.length + 5);
-    return `${label.padEnd(width)}  ${quantity}  ${'█'.repeat(blocks)}${'░'.repeat(20 - blocks)}  ${share.toFixed(1).padStart(5)}%`;
+    return `${label.padEnd(width)}  ${quantity}  ${'█'.repeat(blocks)}${'░'.repeat(20 - blocks)}${max === null ? `  ${share.toFixed(1).padStart(5)}%` : ''}`;
   }), '```'].join('\n');
 }
 
@@ -47,9 +48,9 @@ export function aggregate(readme, owner, repos, commits) {
   const content = ['### <ins><sup>FUN FACTS</sup></ins>',
     '<sub>All commits reachable from current branches, counted once per repository.</sub>',
     chart(weekdays.map((label, i) => [label, days[i]]), 'commit') || '> No commits were found in the current branch history.',
-    `<sub>Languages by repository coverage: ${allowed.length} repositories. Each can count toward multiple languages.</sub>`,
-    chart(top, 'repo', allowed.length) || '> No languages detected for the repositories counted.',
-    ...(more.length ? [`<details>\n<summary>${more.length} more languages</summary>\n\n${chart(more, 'repo', allowed.length)}\n\n</details>`] : []),
+    '<sub>GitHub-detected languages.</sub>',
+    chart(top, 'repo', ranked[0]?.[1]) || '> No languages detected for the repositories counted.',
+    ...(more.length ? [`<details>\n<summary>${more.length} more languages</summary>\n\n${chart(more, 'repo', ranked[0][1])}\n\n</details>`] : []),
   ].join('\n\n');
   const start = '<!-- fun-facts:start -->';
   const end = '<!-- fun-facts:end -->';
