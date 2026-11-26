@@ -28,6 +28,8 @@ test('counts every current-branch commit once and excludes forks, profile, and f
 test('keeps both chart headings visible without data and preserves handwritten text', () => {
   const source = `Intro\n\n${readme}\n\nProjects`;
   const result = aggregate(source, 'demo', [], []);
+  assert.match(result, /<!-- fun-facts:start -->\n\n### /);
+  assert.doesNotMatch(result, /^---$/m);
   assert.match(result, /FUN FACTS[\s\S]+No commits were found/);
   assert.match(result, /No primary languages detected/);
   assert.ok(result.startsWith('Intro\n\n') && result.endsWith('\n\nProjects'));

@@ -1,6 +1,6 @@
 # Profile README maintenance
 
-Edit `README.md` directly for the introduction, contact links, and technology list. This repository must remain public and named `dmechai` for GitHub to display it on the profile. No CMS is required.
+Edit `README.md` directly for the introduction, contact links, and technology list. Keep any technology heading and dividers inside the `tech-stack` markers so the section stays invisible when empty. This repository must remain public and named `dmechai` for GitHub to display it on the profile. No CMS is required.
 
 The host timer `dmechai-profile-stats.timer` runs daily at 04:08 UTC. It requires `gh` authenticated as `dmechai` with read access to the intended repositories and write access to this public README and both contribution SVGs. It publishes only aggregate counts and percentages in the `fun-facts` block, retrying on concurrent edits. The same run refreshes the contribution graphic from complete current-branch history for the latest 53 UTC weeks. It does not publish repository names, links, IDs, or per-repository activity. Counts cover all commits reachable from current branches, deduplicated within each repository, and each repository's detected primary language. Forks and this repository are excluded. Empty datasets retain a no-data message. Publishing totals makes them public, and Git history can retain old totals.
 

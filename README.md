@@ -16,24 +16,10 @@ Visit [my website](https://dmechai.com/) or connect with me on:
 [![X](https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white)](https://x.com/0xdmechai)
 <!-- contact:end -->
 
-<br>
-
----
-
-<br>
-
 <!-- tech-stack:start -->
 <!-- tech-stack:end -->
 
 <!-- fun-facts:start -->
-
-
-<br>
-
----
-
-<br>
-
 
 ### <ins><sup>FUN FACTS</sup></ins>
 

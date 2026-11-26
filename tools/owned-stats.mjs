@@ -39,7 +39,7 @@ export function aggregate(readme, owner, repos, commits) {
     languages.set(language, (languages.get(language) ?? 0) + 1);
   }
   const ranked = [...languages].sort(([a, x], [b, y]) => y - x || a.localeCompare(b, 'en'));
-  const content = ['\n<br>\n\n---\n\n<br>\n', '### <ins><sup>FUN FACTS</sup></ins>',
+  const content = ['### <ins><sup>FUN FACTS</sup></ins>',
     '<sub>All commits reachable from current branches, counted once per repository.</sub>',
     chart(weekdays.map((label, i) => [label, days[i]]), 'commit') || '> No commits were found in the current branch history.',
     '<sub>GitHub-detected primary languages.</sub>',
