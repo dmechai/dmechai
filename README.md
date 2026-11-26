@@ -1,40 +1,43 @@
-<h1 align="center"><em>Hi, I'm dmechai</em></h1>
+<div align="center">
 
-<p align="center"><a href="https://github.com/dmechai/dmechai/edit/main/README.md">编辑这份 README</a></p>
+# *Hi, I'm dmechai*
 
-<h3 align="center"><ins><sup>ABOUT ME</sup></ins></h3>
+### <ins><sup>ABOUT ME</sup></ins>
 
-> **待填写**：写一两句话介绍自己，或写下你最近在做什么。
+**待填写**：写一两句话介绍自己，或写下你最近在做什么。
+
+### <sup>LET'S CONNECT!</sup>
 
 <!-- contact:start -->
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/dmechai)
+[![Repositories](https://img.shields.io/badge/Repositories-444444?style=flat&logo=github&logoColor=white)](https://github.com/dmechai?tab=repositories)
 
-<h3 align="center"><sup>LET'S CONNECT!</sup></h3>
-
-<p align="center"><a href="https://github.com/dmechai">GitHub</a> &middot; <a href="https://github.com/dmechai?tab=repositories">Repositories</a></p>
-
-> **待填写（可选）**：添加你想展示的网站、邮箱或社交链接。不用的可以留空。
-
+**待填写（可选）**：添加网站、邮箱或社交链接。
 <!-- contact:end -->
 
-<!-- tech-stack:start -->
-
-<h3 align="center"><ins><sup>MY TECH STACK</sup></ins></h3>
-
-> **待填写**：列出你的常用技术。可以按语言、前端、后端或工具分组。
-
-<!-- tech-stack:end -->
-
-<!-- fun-facts:start -->
+<br>
 
 ---
 
-<h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>
+<br>
 
-<sub>All commits reachable from current branches, counted once per repository. Forks, this repository, private names, links, and per-repository activity are excluded.</sub>
+<!-- tech-stack:start -->
+### <ins><sup>MY TECH STACK</sup></ins>
 
-**Commits by day of week**
+**待填写**：列出常用技术，可按语言、前端、后端或工具分组。
+<!-- tech-stack:end -->
 
-Complete current branch history · UTC committer dates
+<br>
+
+---
+
+<br>
+
+<!-- fun-facts:start -->
+
+### <ins><sup>FUN FACTS</sup></ins>
+
+<sub>All commits reachable from current branches, counted once per repository.</sub>
 
 ```text
 Sunday     190 commits  ██░░░░░░░░░░░░░░░░░░   11.7%
@@ -46,9 +49,7 @@ Friday     281 commits  ███░░░░░░░░░░░░░░░�
 Saturday   104 commits  █░░░░░░░░░░░░░░░░░░░    6.4%
 ```
 
-**Repositories by primary language**
-
-GitHub-detected primary languages
+<sub>GitHub-detected primary languages.</sub>
 
 ```text
 Python        9 repos  ████████████░░░░░░░░   60.0%
@@ -61,25 +62,31 @@ TypeScript     1 repo  █░░░░░░░░░░░░░░░░░░
 
 <!-- fun-facts:end -->
 
+<br>
+
+---
+
+<br>
+
 <!-- featured-projects:start -->
+### <ins><sup>FEATURED PROJECTS</sup></ins>
 
-<h3 align="center"><ins><sup>FEATURED PROJECTS</sup></ins></h3>
-
-> **待选择**：选几个公开项目，填上名称、链接和一句简介。
-
+**待选择**：选几个项目，填上名称、链接和一句简介。
 <!-- featured-projects:end -->
 
-<!-- snake:start -->
+<br>
 
-<h3 align="center"><ins><sup>CONTRIBUTION ACTIVITY</sup></ins></h3>
+---
+
+<br>
+
+<!-- snake:start -->
+### <ins><sup>CONTRIBUTION ACTIVITY</sup></ins>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/snake-dark.svg">
-  <img alt="GitHub contribution snake" src="assets/snake.svg">
+  <img alt="GitHub contribution activity" src="assets/snake.svg">
 </picture>
-
-<sub>Animation generated with <a href="https://github.com/Platane/snk">Platane/snk</a>.</sub>
-
 <!-- snake:end -->
 
-[Refresh and maintenance](tools/README.md)
+</div>

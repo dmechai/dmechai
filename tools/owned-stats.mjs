@@ -38,11 +38,10 @@ export function aggregate(readme, owner, repos, commits) {
     languages.set(language, (languages.get(language) ?? 0) + 1);
   }
   const ranked = [...languages].sort(([a, x], [b, y]) => y - x || a.localeCompare(b, 'en'));
-  const content = ['---', '<h3 align="center"><ins><sup>FUN FACTS</sup></ins></h3>',
-    '<sub>All commits reachable from current branches, counted once per repository. Forks, this repository, private names, links, and per-repository activity are excluded.</sub>',
-    '**Commits by day of week**', 'Complete current branch history · UTC committer dates',
+  const content = ['### <ins><sup>FUN FACTS</sup></ins>',
+    '<sub>All commits reachable from current branches, counted once per repository.</sub>',
     chart(weekdays.map((label, i) => [label, days[i]]), 'commit') || '> No commits were found in the current branch history.',
-    '**Repositories by primary language**', 'GitHub-detected primary languages',
+    '<sub>GitHub-detected primary languages.</sub>',
     chart(ranked, 'repo') || '> No primary languages detected for the repositories counted.',
   ].join('\n\n');
   const start = '<!-- fun-facts:start -->';

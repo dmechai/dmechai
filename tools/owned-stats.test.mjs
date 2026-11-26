@@ -19,7 +19,7 @@ test('counts every current-branch commit once and excludes forks, profile, and f
     {repositoryId: 105, sha: sha(6), committedAt: '2026-11-24T00:00:00Z'},
   ];
   const result = aggregate(readme, 'demo', repos, commits);
-  assert.match(result, /Tuesday\s+2 commits[^\n]+66\.7%/);
+  assert.match(result, /FUN FACTS[\s\S]+Tuesday\s+2 commits[^\n]+66\.7%/);
   assert.match(result, /Friday\s+1 commit[^\n]+33\.3%/);
   assert.match(result, /Python\s+1 repo[^\n]+50\.0%/);
   assert.doesNotMatch(result, /fixture|Rust|Ruby|Scala|101|102|https:/);
@@ -28,7 +28,7 @@ test('counts every current-branch commit once and excludes forks, profile, and f
 test('keeps both chart headings visible without data and preserves handwritten text', () => {
   const source = `Intro\n\n${readme}\n\nProjects`;
   const result = aggregate(source, 'demo', [], []);
-  assert.match(result, /Commits by day of week[\s\S]+No commits were found/);
-  assert.match(result, /Repositories by primary language[\s\S]+No primary languages detected/);
+  assert.match(result, /FUN FACTS[\s\S]+No commits were found/);
+  assert.match(result, /No primary languages detected/);
   assert.ok(result.startsWith('Intro\n\n') && result.endsWith('\n\nProjects'));
 });
