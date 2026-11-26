@@ -39,6 +39,31 @@ test('updates account metrics and computes language shares only from selected re
   assert.doesNotMatch(cleared, /Featured Projects|LANGUAGES|repo\/demo|75\.0%/);
 });
 
+test('renders only explicitly configured tech badges and hides empty groups', () => {
+  const base = template + '<!-- tech-stack:start -->\n<!-- tech-stack:end -->\n';
+  const result = sync(base, [[]], 'dmechai', {stack: {favorites: ['C++'], other: {Frontend: [], Backend: ['Node.js']}}});
+  assert.match(result, /MY TECH STACK[\s\S]*PERSONAL FAVS[\s\S]*C%2B%2B-444444/);
+  assert.match(result, /<details>[\s\S]*OTHER TECHNOLOGIES USED[\s\S]*Node\.js/);
+  assert.doesNotMatch(result, /Frontend/);
+  assert.equal(sync(result, [[]], 'dmechai', {stack: {favorites: [], other: {}}}), base);
+});
+
+test('counts only unique recent pushes to still-public owned repos in UTC', () => {
+  const base = template + '<!-- fun-facts:start -->\n<!-- fun-facts:end -->\n';
+  const event = (id, created_at, repoId = 10) => ({id, created_at, type: 'PushEvent', public: true, repo: {id: repoId}});
+  const monday = event('1', '2026-11-23T06:00:00Z');
+  const events = [monday, monday, event('2', '2026-11-24T00:00:00Z'),
+    event('3', '2026-10-10T00:00:00Z'), event('4', '2026-11-25T00:00:00Z', 20),
+    {...event('5', '2026-11-25T00:00:00Z'), public: false}];
+  const options = {events, now: Date.parse('2026-11-27T00:00:00Z')};
+  const result = sync(base, [[repo('demo', {id: 10, language: 'Python'}), repo('hidden', {id: 20, private: true})]], 'dmechai', options);
+  assert.match(result, /UTC · 2 recorded/);
+  assert.match(result, /Morning +1[^\n]+50\.0%/);
+  assert.match(result, /Tuesday +1[^\n]+50\.0%/);
+  assert.match(result, /Primary language by featured repository[\s\S]*Python[^\n]+100\.0%/);
+  assert.equal(sync(result, [[]], 'dmechai', options), base);
+});
+
 test('rejects bad response and ambiguous markers', () => {
   assert.throws(() => sync(template, {}, 'dmechai'), /Invalid/);
   assert.throws(() => sync(template + template, [[]], 'dmechai'), /markers/);
