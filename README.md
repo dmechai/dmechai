@@ -80,11 +80,13 @@ Vue               1 repo  ██░░░░░░░░░░░░░░░░
 <tbody>
 <tr>
 <td width="50%" align="left" valign="top"><strong><a href="https://github.com/dmechai/oriel-nft">oriel-nft</a></strong><br><sub>Oriel NFT is a self-hosted AI art studio for creating coherent NFT collections from a reference image.</sub>
-<ul><li>Explore art directions from a reference image and lock in a consistent style.</li><li>Export generated images, NFT metadata, and rarity statistics.</li></ul>
-<img alt="Python" src="assets/featured/b55fee837bdc8a14f41cd0206e7a93654304528db3f58ec22bf0c9f8caf0c3aa.svg"> <img alt="MIT" src="assets/featured/2634612d7b31af8396801daf3ff0ed56787de9f4c962d69b2c4139c3316ee7ff.svg"></td>
+<br><sub>•&nbsp; Explore art directions from a reference image and lock in a consistent style.</sub>
+<br><sub>•&nbsp; Export generated images, NFT metadata, and rarity statistics.</sub>
+<br><img alt="Python" src="assets/featured/b55fee837bdc8a14f41cd0206e7a93654304528db3f58ec22bf0c9f8caf0c3aa.svg"> <img alt="MIT" src="assets/featured/2634612d7b31af8396801daf3ff0ed56787de9f4c962d69b2c4139c3316ee7ff.svg"></td>
 <td width="50%" align="left" valign="top"><strong><a href="https://github.com/dmechai/dmechai">dmechai</a></strong><br><sub>GitHub profile README with project highlights, activity charts, and a contribution snake.</sub>
-<ul><li>Public projects ranked by stars and forks.</li><li>Commit and language charts, plus a light and dark contribution snake.</li></ul>
-<img alt="JavaScript" src="assets/featured/e716c5c602b6056b82755f4079155c97994a277c7c61c35b8293e2b76b854429.svg"> <img alt="Activity Charts" src="assets/featured/2de9588b11a55d0933054ec7d424547311bc8a450e4461f8a75919d67ee17bce.svg"> <img alt="Contribution Snake" src="assets/featured/daa58b2f468578fdd890b3069aedd195643f9ff4e70811ce42fa9307394877d6.svg"></td>
+<br><sub>•&nbsp; Public projects ranked by stars and forks.</sub>
+<br><sub>•&nbsp; Commit and language charts, plus a light and dark contribution snake.</sub>
+<br><img alt="JavaScript" src="assets/featured/e716c5c602b6056b82755f4079155c97994a277c7c61c35b8293e2b76b854429.svg"> <img alt="Activity Charts" src="assets/featured/2de9588b11a55d0933054ec7d424547311bc8a450e4461f8a75919d67ee17bce.svg"> <img alt="Contribution Snake" src="assets/featured/daa58b2f468578fdd890b3069aedd195643f9ff4e70811ce42fa9307394877d6.svg"></td>
 </tr>
 </tbody>
 </table>

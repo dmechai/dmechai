@@ -22,9 +22,9 @@ test('uses the profile repository as the last card when there is room', () => {
   const result = featured(readme, 'demo', [repo('demo', 100), repo('project', 0, {language: 'Python', description: 'Example project.', highlights})]);
   const cards = [...result.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(match => match[1]);
   assert.equal(cards.length, 2);
-  assert.match(cards[0], /\/demo\/project"[\s\S]+<li>Export images &amp; metadata\.<\/li><li>Keep &lt;styles&gt; consistent\.<\/li>[\s\S]+alt="Python"/);
-  assert.match(cards[1], /\/demo\/demo"[\s\S]+<li>Public projects ranked by stars and forks\.<\/li>[\s\S]+alt="Activity Charts"/);
-  assert.doesNotMatch(result, /Third item|Ignore outside|<li><sub>/);
+  assert.match(cards[0], /\/demo\/project"[\s\S]+<sub>•&nbsp; Export images &amp; metadata\.<\/sub>\n<br><sub>•&nbsp; Keep &lt;styles&gt; consistent\.<\/sub>[\s\S]+alt="Python"/);
+  assert.match(cards[1], /\/demo\/demo"[\s\S]+<sub>•&nbsp; Public projects ranked by stars and forks\.<\/sub>[\s\S]+alt="Activity Charts"/);
+  assert.doesNotMatch(result, /Third item|Ignore outside|<li>/);
 });
 
 test('renders one compact left-aligned profile entry with verified details', () => {
@@ -34,7 +34,7 @@ test('renders one compact left-aligned profile entry with verified details', () 
   assert.equal([...result.matchAll(/<td\b/g)].length, 1);
   assert.match(result, /<sub>GitHub profile README with project highlights, activity charts, and a contribution snake\.<\/sub>/);
   assert.deepEqual([...result.matchAll(/<img alt="([^"]+)"/g)].map(match => match[1]), ['JavaScript', 'Activity Charts', 'Contribution Snake']);
-  assert.equal([...result.matchAll(/<li>/g)].length, 2);
+  assert.equal([...result.matchAll(/<sub>•&nbsp; /g)].length, 2);
   assert.doesNotMatch(result, /^---$|View profile|0 Forks|⚖/m);
   assert.equal(featured(result, 'demo', [repo('demo', 0, {language: 'JavaScript'})]), result);
 });
@@ -43,7 +43,7 @@ test('uses the public description and license when available', () => {
   const result = featured(readme, 'demo', [repo('public-tool', 5, {language: 'Python', description: 'A <tool> & examples', license: {spdx_id: 'MIT'}})]);
   assert.match(result, /<sub>A &lt;tool&gt; &amp; examples<\/sub>/);
   assert.deepEqual([...result.matchAll(/<img alt="([^"]+)"/g)].map(match => match[1]), ['5 Stars', 'Python', 'MIT']);
-  assert.doesNotMatch(result, /<li>|View profile/);
+  assert.doesNotMatch(result, /•&nbsp;|View profile/);
 });
 
 test('prioritizes nonzero stars and forks, and uses public topics when there is room', () => {

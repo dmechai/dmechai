@@ -62,8 +62,8 @@ export function featured(readme, owner, repos, images = new Map()) {
     }).join(' ');
     return [
       `<strong><a href="${url}">${escape(repo.name)}</a></strong>${description ? `<br><sub>${escape(description)}</sub>` : ''}`,
-      ...(highlights.length ? [`<ul>${highlights.map(text => `<li>${escape(text)}</li>`).join('')}</ul>`] : []),
-      ...(badges ? [`${highlights.length ? '' : '<br>'}${badges}`] : []),
+      ...highlights.map(text => `<br><sub>•&nbsp; ${escape(text)}</sub>`),
+      ...(badges ? [`<br>${badges}`] : []),
     ].join('\n');
   });
   const rows = [];
