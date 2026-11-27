@@ -10,11 +10,16 @@ test('selects the six highest-ranked public repositories and hides private ones'
     repo('top', 9, {description: 'A <project>'}), repo('tied-b', 4), repo('tied-a', 4), repo('foreign', 100, {owner: {login: 'other'}}),
     repo('seventh', 2), repo('sixth', 3), repo('fifth', 3), repo('fourth', 5)];
   const result = featured(readme, 'demo', repos);
-  assert.match(result, /top[\s\S]+demo[\s\S]+fourth[\s\S]+tied-a[\s\S]+tied-b[\s\S]+fifth/);
-  assert.doesNotMatch(result, /private-one|forked|foreign|seventh|low|待选择/);
+  assert.match(result, /\/top">top[\s\S]+\/fourth">fourth[\s\S]+\/tied-a">tied-a[\s\S]+\/tied-b">tied-b[\s\S]+\/fifth">fifth[\s\S]+\/sixth">sixth/);
+  assert.doesNotMatch(result, /private-one|forked|foreign|seventh|low|待选择|\/demo\/demo"/);
   assert.equal([...result.matchAll(/<tr>/g)].length, 3);
   assert.equal([...result.matchAll(/<td width="50%" align="left" valign="top">/g)].length, 6);
   assert.ok(result.startsWith('Before\n') && result.endsWith('\nAfter'));
+});
+
+test('uses the profile repository as the last card when there is room', () => {
+  const result = featured(readme, 'demo', [repo('demo', 100), repo('project', 0)]);
+  assert.match(result, /\/demo\/project"[\s\S]+\/demo\/demo"/);
 });
 
 test('renders one compact left-aligned profile entry with verified details', () => {

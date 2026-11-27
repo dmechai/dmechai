@@ -18,12 +18,14 @@ function badgeUrl(parts, color, logo, logoColor = 'white') {
 }
 
 export function featured(readme, owner, repos, images = new Map()) {
+  const isProfileRepo = repo => repo.name.toLowerCase() === owner.toLowerCase();
   const selected = repos.filter(repo => repo.owner?.login?.toLowerCase() === owner.toLowerCase()
     && repo.private === false && repo.fork === false)
-    .sort((a, b) => b.stargazers_count - a.stargazers_count || b.forks_count - a.forks_count || a.name.localeCompare(b.name, 'en'))
+    .sort((a, b) => Number(isProfileRepo(a)) - Number(isProfileRepo(b))
+      || b.stargazers_count - a.stargazers_count || b.forks_count - a.forks_count || a.name.localeCompare(b.name, 'en'))
     .slice(0, MAX_PROJECTS);
   const cards = selected.map(repo => {
-    const isProfile = repo.name.toLowerCase() === owner.toLowerCase();
+    const isProfile = isProfileRepo(repo);
     const description = (typeof repo.description === 'string' ? repo.description.replace(/\s+/gu, ' ').trim() : '')
       || (isProfile ? 'The source for this GitHub profile README.' : '');
     const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}`;
