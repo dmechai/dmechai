@@ -60,21 +60,18 @@ export function featured(readme, owner, repos, images = new Map()) {
       images.set(name, url);
       return `<img alt="${escape(label)}" src="assets/featured/${name}">`;
     }).join(' ');
-    return {
-      summary: `<strong><a href="${url}">${escape(repo.name)}</a></strong>${description ? `<br><sub>${escape(description)}</sub>` : ''}`,
-      features: highlights.length ? `<ul>${highlights.map(text => `<li><sub>${escape(text)}</sub></li>`).join('')}</ul>` : '',
-      badges,
-    };
+    return [
+      `<strong><a href="${url}">${escape(repo.name)}</a></strong>${description ? `<br><sub>${escape(description)}</sub>` : ''}`,
+      ...(highlights.length ? [`<ul>${highlights.map(text => `<li>${escape(text)}</li>`).join('')}</ul>`] : []),
+      ...(badges ? [`${highlights.length ? '' : '<br>'}${badges}`] : []),
+    ].join('\n');
   });
   const rows = [];
   const cell = content => `<td width="${cards.length === 1 ? '400' : '50%'}" align="left" valign="top">${content}</td>`;
   for (let i = 0; i < cards.length; i += COLUMNS) {
     const pair = cards.slice(i, i + COLUMNS);
-    for (const field of ['summary', 'features', 'badges']) {
-      if (pair.some(card => card[field])) {
-        rows.push(`<tr>\n${pair.map(card => cell(card[field])).join('\n')}\n</tr>`);
-      }
-    }
+    // GitHub shades even rows within each table body.
+    rows.push(`<tbody>\n<tr>\n${pair.map(cell).join('\n')}\n</tr>\n</tbody>`);
   }
   const content = rows.length ? `\n### <ins><sup>FEATURED PROJECTS</sup></ins>\n\n<div align="left">\n<table>\n${rows.join('\n')}\n</table>\n</div>\n` : '';
   const start = '<!-- featured-projects:start -->';
