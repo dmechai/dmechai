@@ -22,7 +22,7 @@ test('uses the profile repository as the last card when there is room', () => {
   const result = featured(readme, 'demo', [repo('demo', 100), repo('project', 0, {language: 'Python', description: 'Example project.', highlights})]);
   const cards = [...result.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(match => match[1]);
   assert.equal(cards.length, 2);
-  assert.match(cards[0], /\/demo\/project"[\s\S]+<sub>•&nbsp; Export images &amp; metadata\.<\/sub>\n<br><sub>•&nbsp; Keep &lt;styles&gt; consistent\.<\/sub>[\s\S]+alt="Python"/);
+  assert.match(cards[0], /\/demo\/project"[\s\S]+<sub>•&nbsp; Export images &amp; metadata\.<\/sub>\n<br><sub>•&nbsp; Keep &lt;styles&gt; consistent\.<\/sub>\n<br><br><img alt="Python"/);
   assert.match(cards[1], /\/demo\/demo"[\s\S]+<sub>•&nbsp; Public projects ranked by stars and forks\.<\/sub>[\s\S]+alt="Activity Charts"/);
   assert.doesNotMatch(result, /Third item|Ignore outside|<li>/);
 });
