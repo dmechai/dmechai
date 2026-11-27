@@ -79,10 +79,16 @@ Vue               1 repo  ██░░░░░░░░░░░░░░░░
 <table>
 <tbody>
 <tr>
+<td width="50%" align="left" valign="top"><strong><a href="https://github.com/dmechai/newvps">newvps</a></strong><br><sub>Ubuntu / Debian 新 VPS 的交互式初始化脚本，配置系统更新、防火墙和 fail2ban。</sub>
+<br><br><img alt="Shell" src="assets/featured/c5f6dbffb555f517f5bb7a606a1e88d2dfe81ba7b7922e30f33be2d25fefa263.svg"></td>
 <td width="50%" align="left" valign="top"><strong><a href="https://github.com/dmechai/oriel-nft">oriel-nft</a></strong><br><sub>Oriel NFT is a self-hosted AI art studio for creating coherent NFT collections from a reference image.</sub>
 <br><sub>•&nbsp; Explore art directions from a reference image and lock in a consistent style.</sub>
 <br><sub>•&nbsp; Export generated images, NFT metadata, and rarity statistics.</sub>
 <br><br><img alt="Python" src="assets/featured/b55fee837bdc8a14f41cd0206e7a93654304528db3f58ec22bf0c9f8caf0c3aa.svg"> <img alt="MIT" src="assets/featured/2634612d7b31af8396801daf3ff0ed56787de9f4c962d69b2c4139c3316ee7ff.svg"></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
 <td width="50%" align="left" valign="top"><strong><a href="https://github.com/dmechai/dmechai">dmechai</a></strong><br><sub>GitHub profile README with project highlights, activity charts, and a contribution snake.</sub>
 <br><sub>•&nbsp; Public projects ranked by stars and forks.</sub>
 <br><sub>•&nbsp; Commit and language charts, plus a light and dark contribution snake.</sub>
