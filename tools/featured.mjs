@@ -27,7 +27,7 @@ export function featured(readme, owner, repos, images = new Map()) {
   const cards = selected.map(repo => {
     const isProfile = isProfileRepo(repo);
     const description = (typeof repo.description === 'string' ? repo.description.replace(/\s+/gu, ' ').trim() : '')
-      || (isProfile ? 'The source for this GitHub profile README.' : '');
+      || (isProfile ? 'GitHub profile README with project highlights, activity charts, and a contribution snake.' : '');
     const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}`;
     const license = repo.license?.spdx_id;
     const language = typeof repo.language === 'string' ? repo.language : '';
@@ -45,18 +45,19 @@ export function featured(readme, owner, repos, images = new Map()) {
       images.set(name, url);
       return `<img alt="${escape(label)}" src="assets/featured/${name}">`;
     }).join(' ');
-    return [
-      `<td width="${selected.length === 1 ? '400' : '50%'}" align="left" valign="top">`,
-      `<strong><a href="${url}">${escape(repo.name)}</a></strong>`,
-      ...(description ? [`<br><sub>${escape(description)}</sub>`] : []),
-      ...(isProfile ? ['<ul><li><sub>Public projects ranked by stars and forks.</sub></li><li><sub>Commit and language charts, plus a light and dark contribution snake.</sub></li></ul>'] : []),
-      ...(badges ? [`${isProfile ? '' : '<br>'}${badges}`] : []),
-      '</td>',
-    ].join('\n');
+    return {
+      summary: `<strong><a href="${url}">${escape(repo.name)}</a></strong>${description ? `<br><sub>${escape(description)}</sub>` : ''}`,
+      badges,
+    };
   });
   const rows = [];
+  const cell = content => `<td width="${cards.length === 1 ? '400' : '50%'}" align="left" valign="top">${content}</td>`;
   for (let i = 0; i < cards.length; i += COLUMNS) {
-    rows.push(`<tr>\n${cards.slice(i, i + COLUMNS).join('\n')}\n</tr>`);
+    const pair = cards.slice(i, i + COLUMNS);
+    rows.push(`<tr>\n${pair.map(card => cell(card.summary)).join('\n')}\n</tr>`);
+    if (pair.some(card => card.badges)) {
+      rows.push(`<tr>\n${pair.map(card => cell(card.badges)).join('\n')}\n</tr>`);
+    }
   }
   const content = rows.length ? `\n### <ins><sup>FEATURED PROJECTS</sup></ins>\n\n<div align="left">\n<table>\n${rows.join('\n')}\n</table>\n</div>\n` : '';
   const start = '<!-- featured-projects:start -->';

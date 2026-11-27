@@ -12,25 +12,29 @@ test('selects the six highest-ranked public repositories and hides private ones'
   const result = featured(readme, 'demo', repos);
   assert.match(result, /\/top">top[\s\S]+\/fourth">fourth[\s\S]+\/tied-a">tied-a[\s\S]+\/tied-b">tied-b[\s\S]+\/fifth">fifth[\s\S]+\/sixth">sixth/);
   assert.doesNotMatch(result, /private-one|forked|foreign|seventh|low|待选择|\/demo\/demo"/);
-  assert.equal([...result.matchAll(/<tr>/g)].length, 3);
-  assert.equal([...result.matchAll(/<td width="50%" align="left" valign="top">/g)].length, 6);
+  assert.equal([...result.matchAll(/<tr>/g)].length, 6);
+  assert.equal([...result.matchAll(/<td width="50%" align="left" valign="top">/g)].length, 12);
   assert.ok(result.startsWith('Before\n') && result.endsWith('\nAfter'));
 });
 
 test('uses the profile repository as the last card when there is room', () => {
-  const result = featured(readme, 'demo', [repo('demo', 100), repo('project', 0)]);
-  assert.match(result, /\/demo\/project"[\s\S]+\/demo\/demo"/);
+  const result = featured(readme, 'demo', [repo('demo', 100), repo('project', 0, {language: 'Python', description: 'Example project.'})]);
+  const rows = [...result.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(match => match[1]);
+  assert.equal(rows.length, 2);
+  assert.match(rows[0], /\/demo\/project"[\s\S]+\/demo\/demo"/);
+  assert.doesNotMatch(rows[0], /<img|<ul>/);
+  assert.match(rows[1], /alt="Python"[\s\S]+alt="Activity Charts"/);
+  assert.doesNotMatch(rows[1], /<strong>|<sub>/);
 });
 
 test('renders one compact left-aligned profile entry with verified details', () => {
   const result = featured(readme, 'demo', [repo('demo', 0, {language: 'JavaScript'})]);
   assert.match(result, /### <ins><sup>FEATURED PROJECTS<\/sup><\/ins>/);
-  assert.match(result, /<div align="left">\n<table>\n<tr>\n<td width="400" align="left" valign="top">\n<strong><a href="https:\/\/github\.com\/demo\/demo">demo/);
-  assert.equal([...result.matchAll(/<td\b/g)].length, 1);
-  assert.match(result, /<sub>The source for this GitHub profile README\.<\/sub>/);
+  assert.match(result, /<div align="left">\n<table>\n<tr>\n<td width="400" align="left" valign="top"><strong><a href="https:\/\/github\.com\/demo\/demo">demo/);
+  assert.equal([...result.matchAll(/<td\b/g)].length, 2);
+  assert.match(result, /<sub>GitHub profile README with project highlights, activity charts, and a contribution snake\.<\/sub>/);
   assert.deepEqual([...result.matchAll(/<img alt="([^"]+)"/g)].map(match => match[1]), ['JavaScript', 'Activity Charts', 'Contribution Snake']);
-  assert.equal([...result.matchAll(/<li>/g)].length, 2);
-  assert.doesNotMatch(result, /^---$|View profile|0 Forks|⚖/m);
+  assert.doesNotMatch(result, /<ul>|<li>|^---$|View profile|0 Forks|⚖/m);
   assert.equal(featured(result, 'demo', [repo('demo', 0, {language: 'JavaScript'})]), result);
 });
 
@@ -53,8 +57,9 @@ test('prioritizes nonzero stars and forks, and uses public topics when there is 
 test('keeps an odd project in the left column without a placeholder', () => {
   const result = featured(readme, 'demo', [repo('one', 3), repo('two', 2), repo('three', 1)]);
   const rows = [...result.matchAll(/<tr>([\s\S]*?)<\/tr>/g)];
-  assert.deepEqual(rows.map(([, row]) => [...row.matchAll(/<td\b/g)].length), [2, 1]);
-  assert.match(rows[1][1], /\/three"/);
+  assert.deepEqual(rows.map(([, row]) => [...row.matchAll(/<td\b/g)].length), [2, 2, 1, 1]);
+  assert.match(rows[2][1], /\/three"/);
+  assert.match(rows[3][1], /alt="1 Stars"/);
 });
 
 test('hides the section when no public repository exists', () => {
