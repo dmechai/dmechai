@@ -17,15 +17,30 @@ function badgeUrl(parts, color, logo, logoColor = 'white') {
   return `https://img.shields.io/badge/${label}-${color}?${query}`;
 }
 
-export function featured(readme, owner, repos, images = new Map()) {
-  const isProfileRepo = repo => repo.name.toLowerCase() === owner.toLowerCase();
-  const selected = repos.filter(repo => repo.owner?.login?.toLowerCase() === owner.toLowerCase()
+function selectProjects(owner, repos) {
+  return repos.filter(repo => repo.owner?.login?.toLowerCase() === owner.toLowerCase()
     && repo.private === false && repo.fork === false)
-    .sort((a, b) => Number(isProfileRepo(a)) - Number(isProfileRepo(b))
+    .sort((a, b) => Number(a.name.toLowerCase() === owner.toLowerCase()) - Number(b.name.toLowerCase() === owner.toLowerCase())
       || b.stargazers_count - a.stargazers_count || b.forks_count - a.forks_count || a.name.localeCompare(b.name, 'en'))
     .slice(0, MAX_PROJECTS);
+}
+
+export function readHighlights(markdown) {
+  const block = markdown.match(/^<!-- featured-highlights:start -->\s*\r?\n([\s\S]*?)^<!-- featured-highlights:end -->\s*$/m)?.[1] ?? '';
+  return block.split(/\r?\n/).map(line => line.match(/^[-*] (\S.{0,119})$/)?.[1].trim()).filter(Boolean).slice(0, 2);
+}
+
+export function featured(readme, owner, repos, images = new Map()) {
+  const selected = selectProjects(owner, repos);
   const cards = selected.map(repo => {
-    const isProfile = isProfileRepo(repo);
+    const isProfile = repo.name.toLowerCase() === owner.toLowerCase();
+    const highlights = repo.highlights?.length ? repo.highlights : isProfile ? [
+      'Public projects ranked by stars and forks.',
+      'Commit and language charts, plus a light and dark contribution snake.',
+    ] : owner.toLowerCase() === 'dmechai' && repo.name.toLowerCase() === 'oriel-nft' ? [
+      'Explore art directions from a reference image and lock in a consistent style.',
+      'Export generated images, NFT metadata, and rarity statistics.',
+    ] : [];
     const description = (typeof repo.description === 'string' ? repo.description.replace(/\s+/gu, ' ').trim() : '')
       || (isProfile ? 'GitHub profile README with project highlights, activity charts, and a contribution snake.' : '');
     const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}`;
@@ -47,6 +62,7 @@ export function featured(readme, owner, repos, images = new Map()) {
     }).join(' ');
     return {
       summary: `<strong><a href="${url}">${escape(repo.name)}</a></strong>${description ? `<br><sub>${escape(description)}</sub>` : ''}`,
+      features: highlights.length ? `<ul>${highlights.map(text => `<li><sub>${escape(text)}</sub></li>`).join('')}</ul>` : '',
       badges,
     };
   });
@@ -54,9 +70,10 @@ export function featured(readme, owner, repos, images = new Map()) {
   const cell = content => `<td width="${cards.length === 1 ? '400' : '50%'}" align="left" valign="top">${content}</td>`;
   for (let i = 0; i < cards.length; i += COLUMNS) {
     const pair = cards.slice(i, i + COLUMNS);
-    rows.push(`<tr>\n${pair.map(card => cell(card.summary)).join('\n')}\n</tr>`);
-    if (pair.some(card => card.badges)) {
-      rows.push(`<tr>\n${pair.map(card => cell(card.badges)).join('\n')}\n</tr>`);
+    for (const field of ['summary', 'features', 'badges']) {
+      if (pair.some(card => card[field])) {
+        rows.push(`<tr>\n${pair.map(card => cell(card[field])).join('\n')}\n</tr>`);
+      }
     }
   }
   const content = rows.length ? `\n### <ins><sup>FEATURED PROJECTS</sup></ins>\n\n<div align="left">\n<table>\n${rows.join('\n')}\n</table>\n</div>\n` : '';
@@ -73,9 +90,24 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   if (!/^[a-z\d][a-z\d-]*$/i.test(owner ?? '') || !inventory) throw new Error('Expected owner and repository JSON path');
   const images = new Map();
   const source = readFileSync('README.md', 'utf8');
-  const next = featured(source, owner, JSON.parse(readFileSync(inventory, 'utf8')), images);
-  const dir = 'assets/featured';
+  const repos = JSON.parse(readFileSync(inventory, 'utf8'));
   const download = promisify(execFile);
+  await Promise.all(selectProjects(owner, repos).map(async repo => {
+    let markdown = source;
+    if (repo.name.toLowerCase() !== owner.toLowerCase()) {
+      try {
+        const endpoint = `repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo.name)}/readme`;
+        const {stdout} = await download('gh', ['api', '-H', 'Accept: application/vnd.github.raw+json', endpoint], {timeout: 20000});
+        markdown = stdout;
+      } catch (error) {
+        if (!/\(HTTP 404\)/.test(error.stderr ?? '')) throw error;
+        markdown = '';
+      }
+    }
+    repo.highlights = readHighlights(markdown);
+  }));
+  const next = featured(source, owner, repos, images);
+  const dir = 'assets/featured';
   const assets = await Promise.all([...images].filter(([name]) => !existsSync(`${dir}/${name}`)).map(async ([name, url]) => {
     const {stdout: svg} = await download('curl', ['--ipv4', '--fail', '--silent', '--show-error', '--max-time', '12', '--retry', '2', '--retry-max-time', '30', url]);
     if (!/^<svg\b/.test(svg) || !svg.includes('</svg>')) throw new Error(`Invalid badge ${name}`);

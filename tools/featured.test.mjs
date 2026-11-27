@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { featured } from './featured.mjs';
+import { featured, readHighlights } from './featured.mjs';
 
 const readme = 'Before\n<!-- featured-projects:start -->\n<!-- featured-projects:end -->\nAfter';
 const repo = (name, stars, extra = {}) => ({name, owner: {login: 'demo'}, private: false, fork: false, stargazers_count: stars, forks_count: 0, description: extra.description ?? '', ...extra});
@@ -18,23 +18,27 @@ test('selects the six highest-ranked public repositories and hides private ones'
 });
 
 test('uses the profile repository as the last card when there is room', () => {
-  const result = featured(readme, 'demo', [repo('demo', 100), repo('project', 0, {language: 'Python', description: 'Example project.'})]);
+  const highlights = readHighlights('- Ignore outside the block\r\n<!-- featured-highlights:start -->\r\n- Export images & metadata.\r\n* Keep <styles> consistent.\r\n- Third item.\r\n<!-- featured-highlights:end -->');
+  const result = featured(readme, 'demo', [repo('demo', 100), repo('project', 0, {language: 'Python', description: 'Example project.', highlights})]);
   const rows = [...result.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(match => match[1]);
-  assert.equal(rows.length, 2);
+  assert.equal(rows.length, 3);
   assert.match(rows[0], /\/demo\/project"[\s\S]+\/demo\/demo"/);
   assert.doesNotMatch(rows[0], /<img|<ul>/);
-  assert.match(rows[1], /alt="Python"[\s\S]+alt="Activity Charts"/);
-  assert.doesNotMatch(rows[1], /<strong>|<sub>/);
+  assert.match(rows[1], /Export images &amp; metadata\.[\s\S]+Keep &lt;styles&gt; consistent\.[\s\S]+Public projects ranked by stars and forks\./);
+  assert.doesNotMatch(rows[1], /Third item|Ignore outside/);
+  assert.match(rows[2], /alt="Python"[\s\S]+alt="Activity Charts"/);
+  assert.doesNotMatch(rows[2], /<strong>|<sub>/);
 });
 
 test('renders one compact left-aligned profile entry with verified details', () => {
   const result = featured(readme, 'demo', [repo('demo', 0, {language: 'JavaScript'})]);
   assert.match(result, /### <ins><sup>FEATURED PROJECTS<\/sup><\/ins>/);
   assert.match(result, /<div align="left">\n<table>\n<tr>\n<td width="400" align="left" valign="top"><strong><a href="https:\/\/github\.com\/demo\/demo">demo/);
-  assert.equal([...result.matchAll(/<td\b/g)].length, 2);
+  assert.equal([...result.matchAll(/<td\b/g)].length, 3);
   assert.match(result, /<sub>GitHub profile README with project highlights, activity charts, and a contribution snake\.<\/sub>/);
   assert.deepEqual([...result.matchAll(/<img alt="([^"]+)"/g)].map(match => match[1]), ['JavaScript', 'Activity Charts', 'Contribution Snake']);
-  assert.doesNotMatch(result, /<ul>|<li>|^---$|View profile|0 Forks|⚖/m);
+  assert.equal([...result.matchAll(/<li>/g)].length, 2);
+  assert.doesNotMatch(result, /^---$|View profile|0 Forks|⚖/m);
   assert.equal(featured(result, 'demo', [repo('demo', 0, {language: 'JavaScript'})]), result);
 });
 
